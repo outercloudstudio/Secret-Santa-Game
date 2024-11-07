@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bc0cs7twpxlxe"]
+[gd_scene load_steps=12 format=3 uid="uid://bc0cs7twpxlxe"]
 
 [ext_resource type="Script" path="res://Player.cs" id="1_8sm41"]
 [ext_resource type="Material" uid="uid://br0ebwvqvd7w3" path="res://material_prototype.tres" id="2_7pwbt"]
@@ -6,6 +6,9 @@
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_xv2p5"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f0tyy"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6qr8r"]
+size = Vector3(0.702148, 0.669922, 0.655273)
 
 [sub_resource type="BoxMesh" id="BoxMesh_1ttyb"]
 
@@ -56,16 +59,28 @@ shape = SubResource("CapsuleShape3D_f0tyy")
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.592913, 0)
 
-[node name="Hammer" type="Node3D" parent="CharacterBody3D"]
+[node name="HammerHead" type="RigidBody3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.322114, -2.09729)
+mass = 10.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D/HammerHead"]
+shape = SubResource("BoxShape3D_6qr8r")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="CharacterBody3D/HammerHead"]
+transform = Transform3D(0.476323, 0, 0, 0, -1.95254e-08, 0.637174, 0, -0.446689, -2.78518e-08, 0, 0.000155807, 0.0237658)
+mesh = SubResource("BoxMesh_1ttyb")
+skeleton = NodePath("../../Hammer")
+
+[node name="Hammer" type="StaticBody3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.322114, -0.915851)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/Hammer"]
 transform = Transform3D(0.136309, 0, 0, 0, -4.88313e-08, 0.136309, 0, -1.11713, -5.95824e-09, 0, 0.000155807, -0.499299)
 mesh = SubResource("BoxMesh_1ttyb")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="CharacterBody3D/Hammer"]
-transform = Transform3D(0.476323, 0, 0, 0, -1.95254e-08, 0.637174, 0, -0.446689, -2.78518e-08, 0, 0.000155807, -1.15767)
-mesh = SubResource("BoxMesh_1ttyb")
+[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="CharacterBody3D/Hammer"]
+node_a = NodePath("..")
+node_b = NodePath("../../HammerHead")
 
 [node name="Point" type="MeshInstance3D" parent="CharacterBody3D"]
 transform = Transform3D(0.338434, 0, 0, 0, 0.338434, 0, 0, 0, 0.338434, 0, -0.322114, -0.915851)
@@ -107,3 +122,5 @@ shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_b2cjd")
+
+[connection signal="body_entered" from="CharacterBody3D/HammerHead" to="CharacterBody3D" method="_HammerHeadBodyEntered"]

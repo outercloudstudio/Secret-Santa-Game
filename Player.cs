@@ -6,6 +6,8 @@ public partial class Player : CharacterBody3D
 	public const float Speed = 5.0f;
 	public const float JumpVelocity = 4.5f;
 
+	private Vector3 _launchVelocity = Vector3.Zero;
+
 	private float _cameraSensitivity = 0.008f;
 	private float _hammeraSensitivity = 0.027f;
 	private Vector3 _hammerOffset = new Vector3(0f, -0f, 0f);
@@ -44,7 +46,9 @@ public partial class Player : CharacterBody3D
 			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, Speed);
 		}
 
-		Velocity = velocity;
+		Velocity = velocity + _launchVelocity;
+
+		_launchVelocity = _launchVelocity.MoveToward(Vector3.Zero, (float)delta * 4f);
 
 		MoveAndSlide();
 	}
@@ -65,9 +69,16 @@ public partial class Player : CharacterBody3D
 
 	public override void _Process(double delta)
 	{
-		_hammer.Position = new Vector3(0, -0.322f, -0.916f) + _hammerOffset;
-		_hammer.LookAt(ToGlobal(_hammer.Position + new Vector3(0, -0.322f, -0.916f) + _hammerOffset * 2));
+		_hammer.Position = MathHelper.FixedLerp(_hammer.Position, new Vector3(0, -0.322f, -0.416f) + _hammerOffset, 8f, (float)delta);
+		_hammer.LookAt(ToGlobal(_hammer.Position + new Vector3(0, -0.322f, -0.416f) + _hammerOffset * 2));
 
-		_point.GlobalPosition = ToGlobal(_hammer.Position + new Vector3(0, -0.322f, -0.916f) + _hammerOffset * 2);
+		_point.GlobalPosition = ToGlobal(_hammer.Position + new Vector3(0, -0.322f, -0.416f) + _hammerOffset * 2);
+	}
+
+	public void _HammerHeadBodyEntered(Node body)
+	{
+		GD.Print(body);
+
+		_launchVelocity += -Transform.Basis.Z * 5;
 	}
 }
