@@ -1,3 +1,109 @@
-[gd_scene format=3 uid="uid://bc0cs7twpxlxe"]
+[gd_scene load_steps=11 format=3 uid="uid://bc0cs7twpxlxe"]
+
+[ext_resource type="Script" path="res://Player.cs" id="1_8sm41"]
+[ext_resource type="Material" uid="uid://br0ebwvqvd7w3" path="res://material_prototype.tres" id="2_7pwbt"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_xv2p5"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f0tyy"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_1ttyb"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_4myvn"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_uv1iw"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_325jp"]
+sky_top_color = Color(0.573511, 0.340421, 0.636771, 1)
+sky_horizon_color = Color(0.75479, 0.617853, 0.602851, 1)
+ground_bottom_color = Color(0.752941, 0.619608, 0.603922, 1)
+ground_horizon_color = Color(0.752941, 0.619608, 0.603922, 1)
+sun_angle_max = 10.95
+sun_curve = 0.47075
+
+[sub_resource type="Sky" id="Sky_ecjn0"]
+sky_material = SubResource("ProceduralSkyMaterial_325jp")
+
+[sub_resource type="Environment" id="Environment_b2cjd"]
+background_mode = 2
+sky = SubResource("Sky_ecjn0")
+tonemap_mode = 3
+ssr_enabled = true
+ssao_enabled = true
+ssil_enabled = true
+glow_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.890196, 0.784314, 0.772549, 1)
+fog_density = 0.008
+fog_sky_affect = 0.0
+volumetric_fog_density = 0.1
+volumetric_fog_albedo = Color(0.890196, 0.784314, 0.772549, 1)
+volumetric_fog_sky_affect = 0.0
+adjustment_saturation = 2.46
 
 [node name="Prototype" type="Node3D"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.41607, 0)
+script = ExtResource("1_8sm41")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
+mesh = SubResource("CapsuleMesh_xv2p5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("CapsuleShape3D_f0tyy")
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.592913, 0)
+
+[node name="Hammer" type="Node3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.322114, -0.915851)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/Hammer"]
+transform = Transform3D(0.136309, 0, 0, 0, -4.88313e-08, 0.136309, 0, -1.11713, -5.95824e-09, 0, 0.000155807, -0.499299)
+mesh = SubResource("BoxMesh_1ttyb")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="CharacterBody3D/Hammer"]
+transform = Transform3D(0.476323, 0, 0, 0, -1.95254e-08, 0.637174, 0, -0.446689, -2.78518e-08, 0, 0.000155807, -1.15767)
+mesh = SubResource("BoxMesh_1ttyb")
+
+[node name="Point" type="MeshInstance3D" parent="CharacterBody3D"]
+transform = Transform3D(0.338434, 0, 0, 0, 0.338434, 0, 0, 0, 0.338434, 0, -0.322114, -0.915851)
+mesh = SubResource("SphereMesh_4myvn")
+
+[node name="Map" type="Node3D" parent="."]
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="Map"]
+use_collision = true
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="Map/CSGCombiner3D"]
+transform = Transform3D(102.061, 0, 0, 0, 0.719292, 0, 0, 0, 103.47, 0, 0.0685706, 0)
+mesh = SubResource("BoxMesh_uv1iw")
+material = ExtResource("2_7pwbt")
+
+[node name="CSGMesh3D2" type="CSGMesh3D" parent="Map/CSGCombiner3D"]
+transform = Transform3D(3.14064, 0, 0, 0, 6.74934, 0, 0, 0, 26.2718, 3.86258, 2.84653, -18.9047)
+mesh = SubResource("BoxMesh_uv1iw")
+material = ExtResource("2_7pwbt")
+
+[node name="CSGMesh3D3" type="CSGMesh3D" parent="Map/CSGCombiner3D"]
+transform = Transform3D(3.14064, 0, 0, 0, 6.74934, 0, 0, 0, 26.2718, -4.47956, 2.84653, -18.9047)
+mesh = SubResource("BoxMesh_uv1iw")
+material = ExtResource("2_7pwbt")
+
+[node name="CSGMesh3D4" type="CSGMesh3D" parent="Map/CSGCombiner3D"]
+transform = Transform3D(0.771073, 8.10003, 0, -0.771073, 8.10003, 0, 0, 0, 26.2718, 3.86258, 2.84653, 23.5861)
+mesh = SubResource("BoxMesh_uv1iw")
+material = ExtResource("2_7pwbt")
+
+[node name="CSGMesh3D5" type="CSGMesh3D" parent="Map/CSGCombiner3D"]
+transform = Transform3D(0.540356, -8.23252, 0, 0.540356, 8.23252, 0, 0, 0, 26.2718, -4.47956, 2.84653, 23.5861)
+mesh = SubResource("BoxMesh_uv1iw")
+material = ExtResource("2_7pwbt")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.501691, -0.153371, 0.851342, -0.463597, 0.783223, 0.414294, -0.730331, -0.602527, 0.321834, 0, 4.84192, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_b2cjd")
