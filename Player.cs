@@ -4,51 +4,39 @@ using System;
 public partial class Player : CharacterBody3D
 {
 	public const float Speed = 5.0f;
-	public const float JumpVelocity = 4.5f;
+	public const float JumpVelocity = 50f;
 
-	private Vector3 _launchVelocity = Vector3.Zero;
 
 	private float _cameraSensitivity = 0.008f;
-	private float _hammeraSensitivity = 0.027f;
-	private Vector3 _hammerOffset = new Vector3(0f, -0f, 0f);
 	private Camera3D _camera;
-	private Node3D _hammer;
-	private Node3D _point;
+	private RayCast3D _floorRaycast;
+	private bool _chargingJump = false;
+	private float _jumpCharge = 0f;
+
+	private float _shakeTimer = 0f;
+	private Vector3 _shakeDirection = Vector3.Right;
+	private Vector3 _shakePosition;
+	private float _shakeIntensity = 0f;
+	private RandomNumberGenerator _random = new RandomNumberGenerator();
 
 	public override void _Ready()
 	{
 		_camera = GetNode<Camera3D>("Camera3D");
-		_hammer = GetNode<Node3D>("Hammer");
-		_point = GetNode<Node3D>("Point");
+		_floorRaycast = GetNode<RayCast3D>("FloorRaycast");
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		Vector3 velocity = Velocity;
+		Velocity += GetGravity() * 6f * (float)delta;
 
-		if (!IsOnFloor()) velocity += GetGravity() * (float)delta;
-
-
-		if (Input.IsActionJustPressed("jump") && IsOnFloor()) velocity.Y = JumpVelocity;
-
-
-		Vector2 inputDir = Input.GetVector("left", "right", "foward", "back");
-		Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
-
-		if (direction != Vector3.Zero)
+		if (IsOnFloor())
 		{
-			velocity.X = direction.X * Speed;
-			velocity.Z = direction.Z * Speed;
+			Velocity = new Vector3(MathHelper.FixedLerp(Velocity.X, 0f, 8f, (float)delta), Velocity.Y, MathHelper.FixedLerp(Velocity.Z, 0f, 8f, (float)delta));
 		}
 		else
 		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, Speed);
+			Velocity = new Vector3(MathHelper.FixedLerp(Velocity.X, 0f, 1f, (float)delta), Velocity.Y, MathHelper.FixedLerp(Velocity.Z, 0f, 1f, (float)delta));
 		}
-
-		Velocity = velocity + _launchVelocity;
-
-		_launchVelocity = _launchVelocity.MoveToward(Vector3.Zero, (float)delta * 4f);
 
 		MoveAndSlide();
 	}
@@ -58,27 +46,63 @@ public partial class Player : CharacterBody3D
 		if (@event is InputEventMouseMotion mouseMotionEvent)
 		{
 			RotateY(-mouseMotionEvent.Relative.X * _cameraSensitivity);
+			_camera.GlobalRotation = new Vector3(_camera.GlobalRotation.X, GlobalRotation.Y, _camera.GlobalRotation.Z);
 			_camera.RotateX(-mouseMotionEvent.Relative.Y * _cameraSensitivity);
+		}
 
-			_hammerOffset += new Vector3(mouseMotionEvent.Relative.X, -mouseMotionEvent.Relative.Y, 0) * _hammeraSensitivity;
+		if (@event.IsActionPressed("jump"))
+		{
+			_jumpCharge = 0f;
+			_chargingJump = true;
+		}
 
-			_hammerOffset.X = Mathf.Clamp(_hammerOffset.X, -1, 1);
-			_hammerOffset.Y = Mathf.Clamp(_hammerOffset.Y, -1, 1);
+		if (@event.IsActionReleased("jump"))
+		{
+			_chargingJump = false;
+
+			if (IsOnFloor())
+			{
+				Velocity += -_camera.GlobalBasis.Z * JumpVelocity * _jumpCharge;
+			}
 		}
 	}
 
 	public override void _Process(double delta)
 	{
-		_hammer.Position = MathHelper.FixedLerp(_hammer.Position, new Vector3(0, -0.322f, -0.416f) + _hammerOffset, 8f, (float)delta);
-		_hammer.LookAt(ToGlobal(_hammer.Position + new Vector3(0, -0.322f, -0.416f) + _hammerOffset * 2));
+		if (_chargingJump)
+		{
+			_jumpCharge += (float)delta;
 
-		_point.GlobalPosition = ToGlobal(_hammer.Position + new Vector3(0, -0.322f, -0.416f) + _hammerOffset * 2);
+			if (_jumpCharge > 1f) _jumpCharge = 1f;
+
+			_camera.Fov = MathHelper.FixedLerp(_camera.Fov, 90f + _jumpCharge * 20f, 8f, (float)delta);
+
+			_shakeIntensity = _jumpCharge * 0.01f;
+		}
+		else
+		{
+			_camera.Fov = MathHelper.FixedLerp(_camera.Fov, 90f, 8f, (float)delta);
+		}
+
+		HandleScreenshake((float)delta);
 	}
 
-	public void _HammerHeadBodyEntered(Node body)
+	private void HandleScreenshake(float delta)
 	{
-		GD.Print(body);
+		_shakeTimer -= delta;
 
-		_launchVelocity += -Transform.Basis.Z * 5;
+		if (_shakeTimer <= 0)
+		{
+			_shakeTimer = _random.RandfRange(0.02f, 0.03f);
+
+			_shakeDirection = _camera.Basis.X.Rotated(-_camera.Basis.Z.Normalized(), _random.RandfRange(0f, Mathf.Pi * 2f));
+		}
+
+		_shakePosition = _shakeDirection * Mathf.Pow(_shakeIntensity * 3f, 0.8f);
+
+		_shakeIntensity -= delta * 8f;
+		if (_shakeIntensity < 0f) _shakeIntensity = 0f;
+
+		_camera.Position = new Vector3(0f, 0.593f, 0f) + _shakePosition;
 	}
 }
