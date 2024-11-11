@@ -1,0 +1,76 @@
+[gd_scene load_steps=9 format=3 uid="uid://bbinwki8saxpe"]
+
+[ext_resource type="Script" path="res://Player.cs" id="1_usk5k"]
+[ext_resource type="PackedScene" uid="uid://dlj1mpeonu68j" path="res://map.blend" id="2_i1ljh"]
+[ext_resource type="Material" uid="uid://br0ebwvqvd7w3" path="res://material_prototype.tres" id="3_2wves"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_xv2p5"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f0tyy"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_325jp"]
+sky_top_color = Color(0.573511, 0.340421, 0.636771, 1)
+sky_horizon_color = Color(0.75479, 0.617853, 0.602851, 1)
+ground_bottom_color = Color(0.752941, 0.619608, 0.603922, 1)
+ground_horizon_color = Color(0.752941, 0.619608, 0.603922, 1)
+sun_angle_max = 10.95
+sun_curve = 0.47075
+
+[sub_resource type="Sky" id="Sky_ecjn0"]
+sky_material = SubResource("ProceduralSkyMaterial_325jp")
+
+[sub_resource type="Environment" id="Environment_b2cjd"]
+background_mode = 2
+sky = SubResource("Sky_ecjn0")
+tonemap_mode = 3
+ssr_enabled = true
+ssao_enabled = true
+ssil_enabled = true
+glow_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.890196, 0.784314, 0.772549, 1)
+fog_density = 0.008
+fog_sky_affect = 0.0
+volumetric_fog_density = 0.1
+volumetric_fog_albedo = Color(0.890196, 0.784314, 0.772549, 1)
+volumetric_fog_sky_affect = 0.0
+adjustment_saturation = 2.46
+
+[node name="Prototype" type="Node3D"]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.52755, 1.54043, -5.61308)
+axis_lock_angular_x = true
+axis_lock_angular_z = true
+script = ExtResource("1_usk5k")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
+mesh = SubResource("CapsuleMesh_xv2p5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("CapsuleShape3D_f0tyy")
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.592913, 0)
+fov = 90.0
+
+[node name="FloorRaycast" type="RayCast3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.972423, 0)
+target_position = Vector3(0, -0.4, 0)
+
+[node name="Map" type="Node3D" parent="."]
+
+[node name="map" parent="Map" instance=ExtResource("2_i1ljh")]
+
+[node name="Cube_004_010" parent="Map/map" index="0"]
+surface_material_override/0 = ExtResource("3_2wves")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.501691, -0.153371, 0.851342, -0.463597, 0.783223, 0.414294, -0.730331, -0.602527, 0.321834, 0, 4.84192, 0)
+light_energy = 3.0
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_b2cjd")
+
+[editable path="Map/map"]

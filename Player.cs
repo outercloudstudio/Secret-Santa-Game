@@ -3,9 +3,15 @@ using System;
 
 public partial class Player : CharacterBody3D
 {
-	public const float Speed = 5.0f;
-	public const float JumpVelocity = 50f;
+	public float Speed = 10.0f;
+	public float MaxSpeed = 30.0f;
+	public float BaseJump = 0.5f;
+	public float JumpVelocity = 50f;
 
+	private Vector3 _dashVelocity;
+	private Vector3 _movementVelocity;
+	private Vector3 _jumpVelocity;
+	private float _movementSpeed;
 
 	private float _cameraSensitivity = 0.008f;
 	private Camera3D _camera;
@@ -29,16 +35,38 @@ public partial class Player : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
-		Velocity += GetGravity() * 6f * (float)delta;
-
 		if (IsOnFloor())
 		{
-			Velocity = new Vector3(MathHelper.FixedLerp(Velocity.X, 0f, 16f, (float)delta), Velocity.Y, MathHelper.FixedLerp(Velocity.Z, 0f, 16f, (float)delta));
+			if (_jumpVelocity.Y < 0) _jumpVelocity.Y = 0f;
+			_dashVelocity = new Vector3(MathHelper.FixedLerp(_dashVelocity.X, 0f, 16f, (float)delta), _dashVelocity.Y, MathHelper.FixedLerp(_dashVelocity.Z, 0f, 16f, (float)delta));
 		}
 		else
 		{
-			Velocity = new Vector3(MathHelper.FixedLerp(Velocity.X, 0f, 1f, (float)delta), Velocity.Y, MathHelper.FixedLerp(Velocity.Z, 0f, 1f, (float)delta));
+			_jumpVelocity += GetGravity() * 6f * (float)delta;
+			_dashVelocity = new Vector3(MathHelper.FixedLerp(_dashVelocity.X, 0f, 1f, (float)delta), _dashVelocity.Y, MathHelper.FixedLerp(_dashVelocity.Z, 0f, 1f, (float)delta));
 		}
+
+		Vector2 movementInput = Input.GetVector("left", "right", "back", "foward");
+
+		if (movementInput.Length() > 0.1f)
+		{
+			_movementSpeed = MathHelper.FixedLerp(_movementSpeed, MaxSpeed, 2f, (float)delta);
+		}
+		else
+		{
+			_movementSpeed = MathHelper.FixedLerp(_movementSpeed, Speed, 8f, (float)delta);
+		}
+
+		if (IsOnFloor())
+		{
+			_movementVelocity = MathHelper.FixedLerp(_movementVelocity, (GlobalBasis.X * movementInput.X + -GlobalBasis.Z * movementInput.Y) * _movementSpeed, 16f, (float)delta);
+		}
+		else
+		{
+			_movementVelocity = MathHelper.FixedLerp(_movementVelocity, (GlobalBasis.X * movementInput.X + -GlobalBasis.Z * movementInput.Y) * _movementSpeed, 4, (float)delta);
+		}
+
+		Velocity = _dashVelocity + _movementVelocity + _jumpVelocity;
 
 		MoveAndSlide();
 	}
@@ -57,7 +85,7 @@ public partial class Player : CharacterBody3D
 
 		if (@event.IsActionPressed("jump"))
 		{
-			_jumpCharge = 0f;
+			_jumpCharge = BaseJump;
 			_chargingJump = true;
 		}
 
@@ -67,7 +95,10 @@ public partial class Player : CharacterBody3D
 
 			if (IsOnFloor())
 			{
-				Velocity += -_camera.GlobalBasis.Z * JumpVelocity * _jumpCharge;
+				Vector3 dashImpulse = -_camera.GlobalBasis.Z * JumpVelocity * _jumpCharge;
+
+				_dashVelocity = new Vector3(dashImpulse.X, 0, dashImpulse.Z);
+				_jumpVelocity = new Vector3(0, dashImpulse.Y, 0);
 			}
 		}
 	}
@@ -78,16 +109,12 @@ public partial class Player : CharacterBody3D
 		{
 			_jumpCharge += (float)delta;
 
-			if (_jumpCharge > 1f) _jumpCharge = 1f;
-
-			_camera.Fov = MathHelper.FixedLerp(_camera.Fov, 90f + _jumpCharge * 20f, 8f, (float)delta);
+			if (_jumpCharge > 0.8f) _jumpCharge = 0.8f;
 
 			_shakeIntensity = _jumpCharge * 0.01f;
 		}
-		else
-		{
-			_camera.Fov = MathHelper.FixedLerp(_camera.Fov, 90f, 8f, (float)delta);
-		}
+
+		_camera.Fov = MathHelper.FixedLerp(_camera.Fov, 90f + (_chargingJump ? _jumpCharge * 20f : 0f) + (_movementSpeed - Speed) / MaxSpeed * 30f, 8f, (float)delta);
 
 		HandleScreenshake((float)delta);
 	}
