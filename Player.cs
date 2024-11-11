@@ -3,6 +3,9 @@ using System;
 
 public partial class Player : CharacterBody3D
 {
+	[Export] public Panel ScreenOverlay;
+	[Export] public Node3D SpawnPosition;
+
 	public float Speed = 10.0f;
 	public float MaxSpeed = 30.0f;
 	public float BaseJump = 0.5f;
@@ -18,6 +21,8 @@ public partial class Player : CharacterBody3D
 	private RayCast3D _floorRaycast;
 	private bool _chargingJump = false;
 	private float _jumpCharge = 0f;
+	private float _onFloorTimer = 0f;
+	private bool _spawnFogActive = false;
 
 	private float _shakeTimer = 0f;
 	private Vector3 _shakeDirection = Vector3.Right;
@@ -35,7 +40,14 @@ public partial class Player : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		_onFloorTimer -= (float)delta;
+
 		if (IsOnFloor())
+		{
+			_onFloorTimer = 0.1f;
+		}
+
+		if (RecentlyTouchingFloor())
 		{
 			if (_jumpVelocity.Y < 0) _jumpVelocity.Y = 0f;
 			_dashVelocity = new Vector3(MathHelper.FixedLerp(_dashVelocity.X, 0f, 16f, (float)delta), _dashVelocity.Y, MathHelper.FixedLerp(_dashVelocity.Z, 0f, 16f, (float)delta));
@@ -48,6 +60,8 @@ public partial class Player : CharacterBody3D
 
 		Vector2 movementInput = Input.GetVector("left", "right", "back", "foward");
 
+		if (_spawnFogActive) movementInput = Vector2.Zero;
+
 		if (movementInput.Length() > 0.1f)
 		{
 			_movementSpeed = MathHelper.FixedLerp(_movementSpeed, MaxSpeed, 2f, (float)delta);
@@ -57,7 +71,7 @@ public partial class Player : CharacterBody3D
 			_movementSpeed = MathHelper.FixedLerp(_movementSpeed, Speed, 8f, (float)delta);
 		}
 
-		if (IsOnFloor())
+		if (RecentlyTouchingFloor())
 		{
 			_movementVelocity = MathHelper.FixedLerp(_movementVelocity, (GlobalBasis.X * movementInput.X + -GlobalBasis.Z * movementInput.Y) * _movementSpeed, 16f, (float)delta);
 		}
@@ -83,6 +97,8 @@ public partial class Player : CharacterBody3D
 			if (_camera.Rotation.X < -Mathf.DegToRad(80f)) _camera.Rotation = new Vector3(-Mathf.DegToRad(80f), _camera.Rotation.Y, _camera.Rotation.Z);
 		}
 
+		if (_spawnFogActive) return;
+
 		if (@event.IsActionPressed("jump"))
 		{
 			_jumpCharge = BaseJump;
@@ -93,7 +109,7 @@ public partial class Player : CharacterBody3D
 		{
 			_chargingJump = false;
 
-			if (IsOnFloor())
+			if (RecentlyTouchingFloor())
 			{
 				Vector3 dashImpulse = -_camera.GlobalBasis.Z * JumpVelocity * _jumpCharge;
 
@@ -114,9 +130,30 @@ public partial class Player : CharacterBody3D
 			_shakeIntensity = _jumpCharge * 0.01f;
 		}
 
-		_camera.Fov = MathHelper.FixedLerp(_camera.Fov, 90f + (_chargingJump ? _jumpCharge * 20f : 0f) + (_movementSpeed - Speed) / MaxSpeed * 30f, 8f, (float)delta);
+		_camera.Fov = MathHelper.FixedLerp(_camera.Fov, 90f + (_chargingJump ? _jumpCharge * 20f : 0f) + (_movementSpeed - Speed) / MaxSpeed * 30f + (Velocity.Y < 0 ? Math.Abs(Velocity.Y) / 8f : 0f), 8f, (float)delta);
 
 		HandleScreenshake((float)delta);
+
+		Color fogColor = new Color("#c09e9a");
+		fogColor.A = 1f - (GlobalPosition.Y + 20f) / 20f;
+
+		if (_spawnFogActive)
+		{
+			fogColor.A = 1f - (SpawnPosition.GlobalPosition.Y + 50f - GlobalPosition.Y) / 20f;
+
+			if (fogColor.A <= 0f) _spawnFogActive = false;
+		}
+
+		ScreenOverlay.Modulate = fogColor;
+
+		if (GlobalPosition.Y < -30f)
+		{
+			GlobalPosition = SpawnPosition.GlobalPosition + Vector3.Up * 60f;
+
+			_spawnFogActive = true;
+
+			_chargingJump = false;
+		}
 	}
 
 	private void HandleScreenshake(float delta)
@@ -136,5 +173,10 @@ public partial class Player : CharacterBody3D
 		if (_shakeIntensity < 0f) _shakeIntensity = 0f;
 
 		_camera.Position = new Vector3(0f, 0.593f, 0f) + _shakePosition;
+	}
+
+	private bool RecentlyTouchingFloor()
+	{
+		return _onFloorTimer > 0f;
 	}
 }

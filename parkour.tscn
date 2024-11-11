@@ -1,12 +1,25 @@
-[gd_scene load_steps=9 format=3 uid="uid://bbinwki8saxpe"]
+[gd_scene load_steps=12 format=3 uid="uid://bbinwki8saxpe"]
 
 [ext_resource type="Script" path="res://Player.cs" id="1_usk5k"]
-[ext_resource type="PackedScene" uid="uid://dlj1mpeonu68j" path="res://map.blend" id="2_i1ljh"]
-[ext_resource type="Material" uid="uid://br0ebwvqvd7w3" path="res://material_prototype.tres" id="3_2wves"]
+[ext_resource type="Shader" path="res://outline.gdshader" id="2_lipho"]
+[ext_resource type="PackedScene" uid="uid://dpk6pi28who8b" path="res://city.blend" id="3_yusmw"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_xv2p5"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f0tyy"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_u0cuk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nnt3x"]
+render_priority = 0
+shader = ExtResource("2_lipho")
+shader_parameter/normal_threshold = 0.1
+shader_parameter/depth_threshold = 0.05
+shader_parameter/depth_artifact_correction_coef = 2.0
+shader_parameter/outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_caumd"]
+bg_color = Color(1, 1, 1, 1)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_325jp"]
 sky_top_color = Color(0.573511, 0.340421, 0.636771, 1)
@@ -23,14 +36,13 @@ sky_material = SubResource("ProceduralSkyMaterial_325jp")
 background_mode = 2
 sky = SubResource("Sky_ecjn0")
 tonemap_mode = 3
-ssr_enabled = true
 ssao_enabled = true
 ssil_enabled = true
 glow_enabled = true
 fog_enabled = true
-fog_light_color = Color(0.890196, 0.784314, 0.772549, 1)
-fog_density = 0.008
+fog_light_color = Color(0.752941, 0.619608, 0.603922, 1)
 fog_sky_affect = 0.0
+fog_height_density = 0.08
 volumetric_fog_density = 0.1
 volumetric_fog_albedo = Color(0.890196, 0.784314, 0.772549, 1)
 volumetric_fog_sky_affect = 0.0
@@ -38,11 +50,19 @@ adjustment_saturation = 2.46
 
 [node name="Prototype" type="Node3D"]
 
-[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.52755, 1.54043, -5.61308)
+[node name="SpawnPosition" type="Node3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 10.1887, 13.4321, 16.7876)
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("ScreenOverlay", "SpawnPosition")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 10.1887, 13.4321, 16.7876)
 axis_lock_angular_x = true
 axis_lock_angular_z = true
+floor_stop_on_slope = false
+floor_snap_length = 0.0
+platform_on_leave = 2
 script = ExtResource("1_usk5k")
+ScreenOverlay = NodePath("CanvasLayer/ScreenOverlay")
+SpawnPosition = NodePath("../SpawnPosition")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
 mesh = SubResource("CapsuleMesh_xv2p5")
@@ -54,16 +74,25 @@ shape = SubResource("CapsuleShape3D_f0tyy")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.592913, 0)
 fov = 90.0
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/Camera3D"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, -0.428864)
+mesh = SubResource("QuadMesh_u0cuk")
+surface_material_override/0 = SubResource("ShaderMaterial_nnt3x")
+
 [node name="FloorRaycast" type="RayCast3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.972423, 0)
 target_position = Vector3(0, -0.4, 0)
 
-[node name="Map" type="Node3D" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="CharacterBody3D"]
 
-[node name="map" parent="Map" instance=ExtResource("2_i1ljh")]
-
-[node name="Cube_004_010" parent="Map/map" index="0"]
-surface_material_override/0 = ExtResource("3_2wves")
+[node name="ScreenOverlay" type="Panel" parent="CharacterBody3D/CanvasLayer"]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_caumd")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.501691, -0.153371, 0.851342, -0.463597, 0.783223, 0.414294, -0.730331, -0.602527, 0.321834, 0, 4.84192, 0)
@@ -73,4 +102,5 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_b2cjd")
 
-[editable path="Map/map"]
+[node name="city" parent="." instance=ExtResource("3_yusmw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -102, 0)
