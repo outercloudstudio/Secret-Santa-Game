@@ -1,13 +1,24 @@
-[gd_scene load_steps=9 format=3 uid="uid://bc0cs7twpxlxe"]
+[gd_scene load_steps=22 format=3 uid="uid://bc0cs7twpxlxe"]
 
 [ext_resource type="Script" path="res://Player.cs" id="1_8sm41"]
 [ext_resource type="Material" uid="uid://br0ebwvqvd7w3" path="res://material_prototype.tres" id="2_7pwbt"]
+[ext_resource type="PackedScene" uid="uid://dlj1mpeonu68j" path="res://map.blend" id="2_h2jp0"]
+[ext_resource type="Script" path="res://VoicelineTrigger.cs" id="4_l5nvt"]
+[ext_resource type="AudioStream" uid="uid://bbuon3i8ur72v" path="res://voice_lines/ASMR.wav" id="5_d1b8m"]
+[ext_resource type="AudioStream" uid="uid://dgenpjl8h75ou" path="res://voice_lines/WelcomeToGame.wav" id="5_ehowr"]
+[ext_resource type="AudioStream" uid="uid://bmgensxl2jfhb" path="res://voice_lines/Grandpa.wav" id="6_tn2vt"]
+[ext_resource type="AudioStream" uid="uid://cwcoxwgchum1u" path="res://voice_lines/LoseProgress.wav" id="8_wtp58"]
+[ext_resource type="AudioStream" uid="uid://laslk4qagn28" path="res://voice_lines/Overscoped.wav" id="9_0p3k2"]
+[ext_resource type="AudioStream" uid="uid://dn3kk4yf585sc" path="res://voice_lines/ThatsMe.wav" id="10_0y16w"]
+[ext_resource type="AudioStream" uid="uid://3b5utsj4q88d" path="res://voice_lines/Ultimate Joke.wav" id="11_snfhc"]
+[ext_resource type="Script" path="res://FallingVoicelineTrigger.cs" id="12_dfeye"]
+[ext_resource type="PackedScene" uid="uid://bvplknhww2gx7" path="res://Liam.blend" id="12_vpn2c"]
+[ext_resource type="AudioStream" uid="uid://b7isq6ksjkgoi" path="res://voice_lines/Minecraft.wav" id="13_l5orw"]
+[ext_resource type="AudioStream" uid="uid://ddgany2pmkku3" path="res://voice_lines/WayOfKings.wav" id="14_ywfmr"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_xv2p5"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f0tyy"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_uv1iw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_325jp"]
 sky_top_color = Color(0.573511, 0.340421, 0.636771, 1)
@@ -37,10 +48,13 @@ volumetric_fog_albedo = Color(0.890196, 0.784314, 0.772549, 1)
 volumetric_fog_sky_affect = 0.0
 adjustment_saturation = 2.46
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_yr4fl"]
+size = Vector3(73.9746, 2.15723, 21.976)
+
 [node name="Prototype" type="Node3D"]
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.41607, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.52755, 1.54043, -5.61308)
 axis_lock_angular_x = true
 axis_lock_angular_z = true
 script = ExtResource("1_8sm41")
@@ -61,37 +75,174 @@ target_position = Vector3(0, -0.4, 0)
 
 [node name="Map" type="Node3D" parent="."]
 
-[node name="CSGCombiner3D" type="CSGCombiner3D" parent="Map"]
-use_collision = true
+[node name="map" parent="Map" instance=ExtResource("2_h2jp0")]
 
-[node name="CSGMesh3D" type="CSGMesh3D" parent="Map/CSGCombiner3D"]
-transform = Transform3D(102.061, 0, 0, 0, 0.719292, 0, 0, 0, 103.47, 0, 0.0685706, 0)
-mesh = SubResource("BoxMesh_uv1iw")
-material = ExtResource("2_7pwbt")
-
-[node name="CSGMesh3D2" type="CSGMesh3D" parent="Map/CSGCombiner3D"]
-transform = Transform3D(3.14064, 0, 0, 0, 6.74934, 0, 0, 0, 26.2718, 3.86258, 2.84653, -18.9047)
-mesh = SubResource("BoxMesh_uv1iw")
-material = ExtResource("2_7pwbt")
-
-[node name="CSGMesh3D3" type="CSGMesh3D" parent="Map/CSGCombiner3D"]
-transform = Transform3D(3.14064, 0, 0, 0, 6.74934, 0, 0, 0, 26.2718, -4.47956, 2.84653, -18.9047)
-mesh = SubResource("BoxMesh_uv1iw")
-material = ExtResource("2_7pwbt")
-
-[node name="CSGMesh3D4" type="CSGMesh3D" parent="Map/CSGCombiner3D"]
-transform = Transform3D(0.771073, 8.10003, 0, -0.771073, 8.10003, 0, 0, 0, 26.2718, 3.86258, 2.84653, 23.5861)
-mesh = SubResource("BoxMesh_uv1iw")
-material = ExtResource("2_7pwbt")
-
-[node name="CSGMesh3D5" type="CSGMesh3D" parent="Map/CSGCombiner3D"]
-transform = Transform3D(0.540356, -8.23252, 0, 0.540356, 8.23252, 0, 0, 0, 26.2718, -4.47956, 2.84653, 23.5861)
-mesh = SubResource("BoxMesh_uv1iw")
-material = ExtResource("2_7pwbt")
+[node name="Cube_004_010" parent="Map/map" index="0"]
+surface_material_override/0 = ExtResource("2_7pwbt")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.501691, -0.153371, 0.851342, -0.463597, 0.783223, 0.414294, -0.730331, -0.602527, 0.321834, 0, 4.84192, 0)
+light_energy = 3.0
 shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_b2cjd")
+
+[node name="IntroVoicelineTrigger" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.92999, 2.2913, -5.06122)
+script = ExtResource("4_l5nvt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="IntroVoicelineTrigger"]
+shape = SubResource("BoxShape3D_yr4fl")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="IntroVoicelineTrigger"]
+stream = ExtResource("5_ehowr")
+attenuation_model = 3
+panning_strength = 0.0
+
+[node name="ASMRVoicelineTrigger" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.5202, 19.2088, 4.27972)
+script = ExtResource("4_l5nvt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ASMRVoicelineTrigger"]
+shape = SubResource("BoxShape3D_yr4fl")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="ASMRVoicelineTrigger"]
+stream = ExtResource("5_d1b8m")
+attenuation_model = 3
+panning_strength = 0.0
+
+[node name="GrandpaVoicelineTrigger" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.8238, 13.6606, -8.34747)
+script = ExtResource("4_l5nvt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GrandpaVoicelineTrigger"]
+shape = SubResource("BoxShape3D_yr4fl")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="GrandpaVoicelineTrigger"]
+stream = ExtResource("6_tn2vt")
+attenuation_model = 3
+panning_strength = 0.0
+
+[node name="LoseProgressVoicelineTrigger2" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -63.6541, 27.2522, -8.34747)
+script = ExtResource("4_l5nvt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LoseProgressVoicelineTrigger2"]
+shape = SubResource("BoxShape3D_yr4fl")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="LoseProgressVoicelineTrigger2"]
+stream = ExtResource("8_wtp58")
+attenuation_model = 3
+panning_strength = 0.0
+
+[node name="OverscopedProgressVoicelineTrigger" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.83484, 27.5946, 7.50352)
+script = ExtResource("4_l5nvt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="OverscopedProgressVoicelineTrigger"]
+shape = SubResource("BoxShape3D_yr4fl")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="OverscopedProgressVoicelineTrigger"]
+stream = ExtResource("9_0p3k2")
+attenuation_model = 3
+panning_strength = 0.0
+
+[node name="ThatsMeProgressVoicelineTrigger2" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45699, 27.5946, -17.865)
+script = ExtResource("4_l5nvt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ThatsMeProgressVoicelineTrigger2"]
+shape = SubResource("BoxShape3D_yr4fl")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="ThatsMeProgressVoicelineTrigger2"]
+stream = ExtResource("10_0y16w")
+attenuation_model = 3
+panning_strength = 0.0
+
+[node name="UltimateJokeVoicelineTrigger" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.91319, 51.0047, 24.1398)
+script = ExtResource("4_l5nvt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="UltimateJokeVoicelineTrigger"]
+shape = SubResource("BoxShape3D_yr4fl")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="UltimateJokeVoicelineTrigger"]
+stream = ExtResource("11_snfhc")
+attenuation_model = 3
+panning_strength = 0.0
+
+[node name="Falling1VoicelineTrigger" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.7265, 11.3304, 8.23178)
+script = ExtResource("12_dfeye")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Falling1VoicelineTrigger"]
+transform = Transform3D(0.949135, -0.314871, 0, 0.314871, 0.949135, 0, 0, 0, 1, 15.9868, 5.7623, -2.65307)
+shape = SubResource("BoxShape3D_yr4fl")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Falling1VoicelineTrigger"]
+stream = ExtResource("13_l5orw")
+attenuation_model = 3
+panning_strength = 0.0
+
+[node name="Falling2VoicelineTrigger" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -34.7265, 21.1104, -16.0778)
+script = ExtResource("12_dfeye")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Falling2VoicelineTrigger"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.44478, 1.41661, -4.0303)
+shape = SubResource("BoxShape3D_yr4fl")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Falling2VoicelineTrigger"]
+stream = ExtResource("14_ywfmr")
+attenuation_model = 3
+panning_strength = 0.0
+
+[node name="Liam2" parent="." instance=ExtResource("12_vpn2c")]
+transform = Transform3D(-2.25443, -0.000103573, 1.67175, -0.000557875, 2.80664, -0.000578398, -1.67175, -0.000796895, -2.25443, -14.0326, 25.0442, -16.0086)
+
+[node name="Liam" parent="Liam2" index="0"]
+transform = Transform3D(0.727756, 0.0519485, -0.683866, 0.00175514, 0.996983, 0.0776015, 0.685834, -0.0576753, 0.725469, -0.0374012, -0.0729594, 0.0711741)
+
+[node name="Skeleton3D" parent="Liam2/Liam" index="0"]
+bones/1/rotation = Quaternion(-0.014046, 0.039679, -0.0160668, 0.998985)
+bones/2/rotation = Quaternion(0.023531, 0.0800847, -0.0222356, 0.996262)
+bones/3/rotation = Quaternion(0.102248, 0.0815404, -0.0160978, 0.991281)
+bones/4/rotation = Quaternion(0.192529, -0.00263852, 0.00101899, 0.981287)
+bones/5/rotation = Quaternion(-0.104202, -0.00251314, 0.00129776, 0.994552)
+bones/6/rotation = Quaternion(-0.103058, -0.00271204, 0.000802924, 0.994671)
+bones/8/rotation = Quaternion(-0.594944, -0.346017, -0.363306, 0.627951)
+bones/9/rotation = Quaternion(-0.254272, 0.557029, -0.58907, 0.527314)
+bones/10/rotation = Quaternion(0.405071, 0.0884503, 0.00898535, 0.909953)
+bones/11/rotation = Quaternion(0.0123561, 0.132296, 0.163002, 0.977638)
+bones/13/rotation = Quaternion(-0.570715, 0.38175, 0.418425, 0.594535)
+bones/14/rotation = Quaternion(-0.382464, -0.620755, 0.401497, 0.554243)
+bones/15/rotation = Quaternion(0.359135, -0.00301123, 0.0478322, 0.932054)
+bones/16/rotation = Quaternion(0.102992, -0.0566266, 0.104949, 0.987508)
+bones/18/rotation = Quaternion(-3.30072e-08, 0.696936, 0.717133, -3.14282e-08)
+bones/20/rotation = Quaternion(-3.30072e-08, 0.696936, 0.717133, -3.14282e-08)
+bones/26/rotation = Quaternion(0.929764, 0.0888203, -0.0940991, 0.344667)
+bones/27/rotation = Quaternion(0.366782, 0.12651, 0.0360084, 0.920961)
+bones/28/rotation = Quaternion(-0.585534, -0.0502094, 0.0220385, 0.808792)
+bones/29/rotation = Quaternion(-0.0542937, 0.954245, -0.293999, -0.00580152)
+bones/33/rotation = Quaternion(0.970482, -0.109414, 0.140447, 0.162687)
+bones/34/rotation = Quaternion(0.358607, 0.0666984, 0.0235597, 0.930804)
+bones/35/rotation = Quaternion(-0.678373, 0.0893091, -0.112105, 0.720602)
+bones/36/rotation = Quaternion(0.0178858, 0.956859, -0.289836, -0.00977819)
+bones/38/rotation = Quaternion(-0.665423, 0.693964, -0.19032, -0.198506)
+
+[node name="AnimationPlayer" parent="Liam2" index="1"]
+autoplay = "Idle"
+
+[connection signal="body_entered" from="IntroVoicelineTrigger" to="IntroVoicelineTrigger" method="OnBodyEntered"]
+[connection signal="body_entered" from="ASMRVoicelineTrigger" to="ASMRVoicelineTrigger" method="OnBodyEntered"]
+[connection signal="body_entered" from="GrandpaVoicelineTrigger" to="GrandpaVoicelineTrigger" method="OnBodyEntered"]
+[connection signal="body_entered" from="LoseProgressVoicelineTrigger2" to="LoseProgressVoicelineTrigger2" method="OnBodyEntered"]
+[connection signal="body_entered" from="OverscopedProgressVoicelineTrigger" to="OverscopedProgressVoicelineTrigger" method="OnBodyEntered"]
+[connection signal="body_entered" from="ThatsMeProgressVoicelineTrigger2" to="ThatsMeProgressVoicelineTrigger2" method="OnBodyEntered"]
+[connection signal="body_entered" from="UltimateJokeVoicelineTrigger" to="UltimateJokeVoicelineTrigger" method="OnBodyEntered"]
+[connection signal="body_entered" from="Falling1VoicelineTrigger" to="Falling1VoicelineTrigger" method="OnBodyEntered"]
+[connection signal="body_entered" from="Falling2VoicelineTrigger" to="Falling2VoicelineTrigger" method="OnBodyEntered"]
+
+[editable path="Map/map"]
+[editable path="Liam2"]

@@ -23,6 +23,8 @@ public partial class Player : CharacterBody3D
 	{
 		_camera = GetNode<Camera3D>("Camera3D");
 		_floorRaycast = GetNode<RayCast3D>("FloorRaycast");
+
+		Input.MouseMode = Input.MouseModeEnum.Captured;
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -31,7 +33,7 @@ public partial class Player : CharacterBody3D
 
 		if (IsOnFloor())
 		{
-			Velocity = new Vector3(MathHelper.FixedLerp(Velocity.X, 0f, 8f, (float)delta), Velocity.Y, MathHelper.FixedLerp(Velocity.Z, 0f, 8f, (float)delta));
+			Velocity = new Vector3(MathHelper.FixedLerp(Velocity.X, 0f, 16f, (float)delta), Velocity.Y, MathHelper.FixedLerp(Velocity.Z, 0f, 16f, (float)delta));
 		}
 		else
 		{
@@ -47,7 +49,10 @@ public partial class Player : CharacterBody3D
 		{
 			RotateY(-mouseMotionEvent.Relative.X * _cameraSensitivity);
 			_camera.GlobalRotation = new Vector3(_camera.GlobalRotation.X, GlobalRotation.Y, _camera.GlobalRotation.Z);
-			_camera.RotateX(-mouseMotionEvent.Relative.Y * _cameraSensitivity);
+			_camera.Rotation += new Vector3(-mouseMotionEvent.Relative.Y * _cameraSensitivity, 0, 0);
+
+			if (_camera.Rotation.X > Mathf.DegToRad(80f)) _camera.Rotation = new Vector3(Mathf.DegToRad(80f), _camera.Rotation.Y, _camera.Rotation.Z);
+			if (_camera.Rotation.X < -Mathf.DegToRad(80f)) _camera.Rotation = new Vector3(-Mathf.DegToRad(80f), _camera.Rotation.Y, _camera.Rotation.Z);
 		}
 
 		if (@event.IsActionPressed("jump"))
