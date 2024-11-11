@@ -15,9 +15,17 @@ run/main_scene="res://parkour.tscn"
 config/features=PackedStringArray("4.3", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[display]
+
+window/size/mode=3
+
 [dotnet]
 
 project/assembly_name="Santa"
+
+[editor]
+
+movie_writer/movie_file="D:/Devlogs/SecretSanta/PlatformingShowcase1.avi"
 
 [input]
 
