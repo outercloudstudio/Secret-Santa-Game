@@ -1,8 +1,8 @@
 [gd_scene load_steps=12 format=3 uid="uid://bbinwki8saxpe"]
 
-[ext_resource type="Script" path="res://Player.cs" id="1_usk5k"]
-[ext_resource type="Shader" path="res://outline.gdshader" id="2_lipho"]
-[ext_resource type="PackedScene" uid="uid://dpk6pi28who8b" path="res://city_1.blend" id="3_yusmw"]
+[ext_resource type="Script" path="res://Player.cs" id="1_avq78"]
+[ext_resource type="Shader" path="res://outline.gdshader" id="2_vrqrc"]
+[ext_resource type="PackedScene" uid="uid://dpk6pi28who8b" path="res://city_1.blend" id="3_wxaoq"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_xv2p5"]
 
@@ -12,7 +12,7 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_nnt3x"]
 render_priority = 0
-shader = ExtResource("2_lipho")
+shader = ExtResource("2_vrqrc")
 shader_parameter/normal_threshold = 0.1
 shader_parameter/depth_threshold = 0.05
 shader_parameter/depth_artifact_correction_coef = 2.0
@@ -60,7 +60,7 @@ axis_lock_angular_z = true
 floor_stop_on_slope = false
 floor_snap_length = 0.0
 platform_on_leave = 2
-script = ExtResource("1_usk5k")
+script = ExtResource("1_avq78")
 ScreenOverlay = NodePath("CanvasLayer/ScreenOverlay")
 SpawnPosition = NodePath("../SpawnPosition")
 
@@ -102,5 +102,5 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_b2cjd")
 
-[node name="city" parent="." instance=ExtResource("3_yusmw")]
+[node name="city" parent="." instance=ExtResource("3_wxaoq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -102, 0)

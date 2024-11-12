@@ -1,0 +1,106 @@
+[gd_scene load_steps=12 format=3 uid="uid://cnl4uwxmqxx0x"]
+
+[ext_resource type="Script" path="res://Player.cs" id="1_owejm"]
+[ext_resource type="Shader" path="res://outline.gdshader" id="2_w6117"]
+[ext_resource type="PackedScene" uid="uid://b6yyy810rxnm4" path="res://city_2.blend" id="3_76lql"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_xv2p5"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f0tyy"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_u0cuk"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nnt3x"]
+render_priority = 0
+shader = ExtResource("2_w6117")
+shader_parameter/normal_threshold = 0.1
+shader_parameter/depth_threshold = 0.05
+shader_parameter/depth_artifact_correction_coef = 2.0
+shader_parameter/outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_caumd"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_325jp"]
+sky_top_color = Color(0.573511, 0.340421, 0.636771, 1)
+sky_horizon_color = Color(0.75479, 0.617853, 0.602851, 1)
+ground_bottom_color = Color(0.752941, 0.619608, 0.603922, 1)
+ground_horizon_color = Color(0.752941, 0.619608, 0.603922, 1)
+sun_angle_max = 10.95
+sun_curve = 0.47075
+
+[sub_resource type="Sky" id="Sky_ecjn0"]
+sky_material = SubResource("ProceduralSkyMaterial_325jp")
+
+[sub_resource type="Environment" id="Environment_b2cjd"]
+background_mode = 2
+sky = SubResource("Sky_ecjn0")
+tonemap_mode = 3
+ssao_enabled = true
+ssil_enabled = true
+glow_enabled = true
+fog_enabled = true
+fog_light_color = Color(0.752941, 0.619608, 0.603922, 1)
+fog_sky_affect = 0.0
+fog_height_density = 0.08
+volumetric_fog_density = 0.1
+volumetric_fog_albedo = Color(0.890196, 0.784314, 0.772549, 1)
+volumetric_fog_sky_affect = 0.0
+adjustment_saturation = 2.46
+
+[node name="Prototype" type="Node3D"]
+
+[node name="SpawnPosition" type="Node3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 10.1887, 13.4321, 16.7876)
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." node_paths=PackedStringArray("ScreenOverlay", "SpawnPosition")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 10.1887, 13.4321, 1.1942)
+axis_lock_angular_x = true
+axis_lock_angular_z = true
+floor_stop_on_slope = false
+floor_snap_length = 0.0
+platform_on_leave = 2
+script = ExtResource("1_owejm")
+ScreenOverlay = NodePath("CanvasLayer/ScreenOverlay")
+SpawnPosition = NodePath("../SpawnPosition")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D"]
+mesh = SubResource("CapsuleMesh_xv2p5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+shape = SubResource("CapsuleShape3D_f0tyy")
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.592913, 0)
+fov = 90.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/Camera3D"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, -0.428864)
+mesh = SubResource("QuadMesh_u0cuk")
+surface_material_override/0 = SubResource("ShaderMaterial_nnt3x")
+
+[node name="FloorRaycast" type="RayCast3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.972423, 0)
+target_position = Vector3(0, -0.4, 0)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="CharacterBody3D"]
+
+[node name="ScreenOverlay" type="Panel" parent="CharacterBody3D/CanvasLayer"]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_caumd")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.501691, -0.153371, 0.851342, -0.463597, 0.783223, 0.414294, -0.730331, -0.602527, 0.321834, 0, 4.84192, 0)
+light_energy = 3.0
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_b2cjd")
+
+[node name="city_2" parent="." instance=ExtResource("3_76lql")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -98.8713, 0)

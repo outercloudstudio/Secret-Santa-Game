@@ -1,5 +1,7 @@
 using Godot;
+using Godot.Collections;
 using System;
+using System.Linq;
 
 public partial class Player : CharacterBody3D
 {
@@ -22,6 +24,8 @@ public partial class Player : CharacterBody3D
 	private bool _chargingJump = false;
 	private float _jumpCharge = 0f;
 	private float _onFloorTimer = 0f;
+	private float _wallRunningTimer = 0f;
+	private Vector3 _lastWallRunningNormal = Vector3.Zero;
 	private bool _spawnFogActive = false;
 
 	private float _shakeTimer = 0f;
@@ -41,24 +45,46 @@ public partial class Player : CharacterBody3D
 	public override void _PhysicsProcess(double delta)
 	{
 		_onFloorTimer -= (float)delta;
+		_wallRunningTimer -= (float)delta;
 
 		if (IsOnFloor())
 		{
 			_onFloorTimer = 0.1f;
 		}
 
-		if (RecentlyTouchingFloor())
+		Vector2 movementInput = Input.GetVector("left", "right", "back", "foward");
+		Vector3 movementVector = GlobalBasis.X * movementInput.X + -GlobalBasis.Z * movementInput.Y;
+
+		bool wallRunning = false;
+
+		var (isNextToWallRight, wallRightNormal) = IsNextToWall(GlobalBasis.X);
+		var (isNextToWallLeft, wallLeftNormal) = IsNextToWall(-GlobalBasis.X);
+
+		if (isNextToWallRight) _lastWallRunningNormal = wallRightNormal;
+		if (isNextToWallLeft) _lastWallRunningNormal = wallLeftNormal;
+		if (isNextToWallRight && isNextToWallLeft) _lastWallRunningNormal = Vector3.Zero;
+
+		if (isNextToWallRight && movementVector.Dot(wallRightNormal) < 0f) wallRunning = true;
+		if (isNextToWallLeft && movementVector.Dot(wallLeftNormal) < 0f) wallRunning = true;
+
+		if (wallRunning) _wallRunningTimer = 0.3f;
+
+		if (IsOnFloor())
 		{
 			if (_jumpVelocity.Y < 0) _jumpVelocity.Y = 0f;
 			_dashVelocity = new Vector3(MathHelper.FixedLerp(_dashVelocity.X, 0f, 16f, (float)delta), _dashVelocity.Y, MathHelper.FixedLerp(_dashVelocity.Z, 0f, 16f, (float)delta));
+		}
+		if (wallRunning)
+		{
+			_jumpVelocity += GetGravity() * 1f * (float)delta;
+
+			_dashVelocity = new Vector3(MathHelper.FixedLerp(_dashVelocity.X, 0f, 1f, (float)delta), _dashVelocity.Y, MathHelper.FixedLerp(_dashVelocity.Z, 0f, 1, (float)delta));
 		}
 		else
 		{
 			_jumpVelocity += GetGravity() * 6f * (float)delta;
 			_dashVelocity = new Vector3(MathHelper.FixedLerp(_dashVelocity.X, 0f, 1f, (float)delta), _dashVelocity.Y, MathHelper.FixedLerp(_dashVelocity.Z, 0f, 1f, (float)delta));
 		}
-
-		Vector2 movementInput = Input.GetVector("left", "right", "back", "foward");
 
 		if (_spawnFogActive) movementInput = Vector2.Zero;
 
@@ -71,13 +97,13 @@ public partial class Player : CharacterBody3D
 			_movementSpeed = MathHelper.FixedLerp(_movementSpeed, Speed, 8f, (float)delta);
 		}
 
-		if (RecentlyTouchingFloor())
+		if (IsOnFloor() || wallRunning)
 		{
-			_movementVelocity = MathHelper.FixedLerp(_movementVelocity, (GlobalBasis.X * movementInput.X + -GlobalBasis.Z * movementInput.Y) * _movementSpeed, 16f, (float)delta);
+			_movementVelocity = MathHelper.FixedLerp(_movementVelocity, movementVector * _movementSpeed, 16f, (float)delta);
 		}
 		else
 		{
-			_movementVelocity = MathHelper.FixedLerp(_movementVelocity, (GlobalBasis.X * movementInput.X + -GlobalBasis.Z * movementInput.Y) * _movementSpeed, 4, (float)delta);
+			_movementVelocity = MathHelper.FixedLerp(_movementVelocity, movementVector * _movementSpeed, 4, (float)delta);
 		}
 
 		Velocity = _dashVelocity + _movementVelocity + _jumpVelocity;
@@ -109,7 +135,7 @@ public partial class Player : CharacterBody3D
 		{
 			_chargingJump = false;
 
-			if (RecentlyTouchingFloor())
+			if (RecentlyTouchingFloor() || (RecentlyRanWall() && (_lastWallRunningNormal == Vector3.Zero || _lastWallRunningNormal.Dot(-_camera.GlobalBasis.Z) >= 0)))
 			{
 				Vector3 dashImpulse = -_camera.GlobalBasis.Z * JumpVelocity * _jumpCharge;
 
@@ -175,8 +201,26 @@ public partial class Player : CharacterBody3D
 		_camera.Position = new Vector3(0f, 0.593f, 0f) + _shakePosition;
 	}
 
+	private (bool, Vector3) IsNextToWall(Vector3 direction)
+	{
+		PhysicsDirectSpaceState3D spaceState = GetWorld3D().DirectSpaceState;
+
+		PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(GlobalPosition + Vector3.Down * 0.705f, GlobalPosition + Vector3.Down * 0.705f + direction);
+		Dictionary hit = spaceState.IntersectRay(query);
+
+		if (hit.Count == 0) return (false, Vector3.Zero);
+
+		return (true, (Vector3)hit["normal"]);
+	}
+
 	private bool RecentlyTouchingFloor()
 	{
 		return _onFloorTimer > 0f;
 	}
+
+	private bool RecentlyRanWall()
+	{
+		return _wallRunningTimer > 0f;
+	}
+
 }
