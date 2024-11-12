@@ -27,6 +27,7 @@ public partial class Player : CharacterBody3D
 	private float _wallRunningTimer = 0f;
 	private Vector3 _lastWallRunningNormal = Vector3.Zero;
 	private bool _spawnFogActive = false;
+	private float _cameraWallTilt = 0f;
 
 	private float _shakeTimer = 0f;
 	private Vector3 _shakeDirection = Vector3.Right;
@@ -60,14 +61,30 @@ public partial class Player : CharacterBody3D
 		var (isNextToWallRight, wallRightNormal) = IsNextToWall(GlobalBasis.X);
 		var (isNextToWallLeft, wallLeftNormal) = IsNextToWall(-GlobalBasis.X);
 
-		if (isNextToWallRight) _lastWallRunningNormal = wallRightNormal;
-		if (isNextToWallLeft) _lastWallRunningNormal = wallLeftNormal;
-		if (isNextToWallRight && isNextToWallLeft) _lastWallRunningNormal = Vector3.Zero;
-
 		if (isNextToWallRight && movementVector.Dot(wallRightNormal) < 0f) wallRunning = true;
 		if (isNextToWallLeft && movementVector.Dot(wallLeftNormal) < 0f) wallRunning = true;
 
 		if (wallRunning) _wallRunningTimer = 0.3f;
+
+		if (isNextToWallRight)
+		{
+			_lastWallRunningNormal = wallRightNormal;
+			_cameraWallTilt = 1f;
+		}
+
+		if (isNextToWallLeft)
+		{
+			_lastWallRunningNormal = wallLeftNormal;
+			_cameraWallTilt = -1f;
+		}
+
+		if (isNextToWallRight && isNextToWallLeft)
+		{
+			_lastWallRunningNormal = Vector3.Zero;
+			_cameraWallTilt = 0f;
+		}
+
+		if (!wallRunning) _cameraWallTilt = 0f;
 
 		if (IsOnFloor())
 		{
@@ -180,6 +197,8 @@ public partial class Player : CharacterBody3D
 
 			_chargingJump = false;
 		}
+
+		_camera.Rotation = new Vector3(_camera.Rotation.X, _camera.Rotation.Y, MathHelper.FixedLerp(_camera.Rotation.Z, Mathf.DegToRad(_cameraWallTilt * 10f), 8f, (float)delta));
 	}
 
 	private void HandleScreenshake(float delta)
