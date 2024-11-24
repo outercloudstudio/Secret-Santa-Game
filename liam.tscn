@@ -159,4 +159,12 @@ debug_path_custom_color = Color(1, 0, 0.861831, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_44wik")
 
+[node name="JumpRaycast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
+target_position = Vector3(0, -2, 0)
+
+[node name="WallRaycast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.414752, 0)
+target_position = Vector3(0, 0, 0.6)
+
 [editable path="Liam2"]

@@ -23,7 +23,6 @@ public partial class Player : CharacterBody3D
 
 	private float _cameraSensitivity = 0.004f;
 	private Camera3D _camera;
-	private RayCast3D _floorRaycast;
 	private Node3D _handle;
 	private bool _chargingJump = false;
 	private float _jumpCharge = 0f;
@@ -45,7 +44,6 @@ public partial class Player : CharacterBody3D
 	public override void _Ready()
 	{
 		_camera = GetNode<Camera3D>("Camera3D");
-		_floorRaycast = GetNode<RayCast3D>("FloorRaycast");
 		_handle = _camera.GetNode<Node3D>("Handle");
 
 		Input.MouseMode = Input.MouseModeEnum.Captured;
