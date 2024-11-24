@@ -5,6 +5,8 @@ using System.Linq;
 
 public partial class Player : CharacterBody3D
 {
+	public static Player Me;
+
 	[Export] public Panel ScreenOverlay;
 	[Export] public Node3D SpawnPosition;
 
@@ -47,6 +49,8 @@ public partial class Player : CharacterBody3D
 		_handle = _camera.GetNode<Node3D>("Handle");
 
 		Input.MouseMode = Input.MouseModeEnum.Captured;
+
+		Me = this;
 	}
 
 	public override void _PhysicsProcess(double delta)
