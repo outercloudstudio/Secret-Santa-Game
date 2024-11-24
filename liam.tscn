@@ -1,8 +1,9 @@
-[gd_scene load_steps=21 format=3 uid="uid://81fl28yblv5d"]
+[gd_scene load_steps=22 format=3 uid="uid://81fl28yblv5d"]
 
 [ext_resource type="Script" path="res://Enemy.cs" id="1_j8jsr"]
 [ext_resource type="PackedScene" uid="uid://bvplknhww2gx7" path="res://Liam.blend" id="1_wd58v"]
 [ext_resource type="Script" path="res://Damageable.cs" id="3_befjb"]
+[ext_resource type="Script" path="res://DynamicHitbox.cs" id="4_hylmx"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xakuc"]
 animation = &"RunFast"
@@ -93,30 +94,30 @@ script = ExtResource("1_j8jsr")
 transform = Transform3D(2.00887, 0, 0, 0, 2.00887, 0, 0, 0, 2.00887, 0, 0, 0)
 
 [node name="Liam" parent="Liam2" index="0"]
-transform = Transform3D(0.987247, -0.0161839, 0.158371, 0.0632638, 0.952777, -0.297006, -0.146086, 0.303238, 0.94165, 0.0333515, -0.0482368, -0.341466)
+transform = Transform3D(0.985812, -0.167378, 0.012577, 0.162067, 0.929672, -0.33082, 0.0436796, 0.328165, 0.94361, 0.17521, -0.0192608, -0.322721)
 
 [node name="Skeleton3D" parent="Liam2/Liam" index="0"]
 bones/0/scale = Vector3(1, 1, 1)
-bones/1/rotation = Quaternion(-0.00959358, -0.0638024, -0.0176476, 0.99776)
-bones/2/rotation = Quaternion(-0.0385788, -0.0284681, -0.00566927, 0.998834)
-bones/3/rotation = Quaternion(0.0410076, -0.0271091, -0.00885935, 0.998752)
-bones/4/rotation = Quaternion(0.185213, 0.00128459, 0.00459103, 0.982687)
-bones/5/rotation = Quaternion(-0.111607, 0.00177255, 0.00442562, 0.993741)
+bones/1/rotation = Quaternion(-0.0123463, 0.0850402, -0.112214, 0.989962)
+bones/2/rotation = Quaternion(-0.0434898, 0.0331214, -0.0199441, 0.998306)
+bones/3/rotation = Quaternion(0.0356414, 0.0353039, -0.0154809, 0.998621)
+bones/4/rotation = Quaternion(0.207779, -0.0141501, -0.00127166, 0.978073)
+bones/5/rotation = Quaternion(-0.0886807, -0.0142047, 0.000262879, 0.995959)
 bones/5/scale = Vector3(1, 1, 1)
-bones/6/rotation = Quaternion(-0.110463, 0.000910229, 0.00467959, 0.993869)
-bones/8/rotation = Quaternion(-0.556489, -0.402478, -0.478152, 0.547451)
-bones/9/rotation = Quaternion(0.0169282, 0.490374, -0.650243, 0.580027)
+bones/6/rotation = Quaternion(-0.0875346, -0.0140016, -0.00240846, 0.99606)
+bones/8/rotation = Quaternion(-0.512553, -0.47655, -0.416169, 0.580511)
+bones/9/rotation = Quaternion(-0.203714, 0.912261, -0.29745, 0.194431)
 bones/9/scale = Vector3(1, 1, 1)
-bones/10/rotation = Quaternion(0.530752, 0.0284375, -0.00453981, 0.847038)
+bones/10/rotation = Quaternion(0.522923, 0.0286002, -0.00447271, 0.851888)
 bones/10/scale = Vector3(1, 1, 1)
-bones/11/rotation = Quaternion(0.165936, -0.254361, 0.359433, 0.882368)
+bones/11/rotation = Quaternion(0.0136728, -0.391132, 0.0700595, 0.917563)
 bones/11/scale = Vector3(1, 1, 1)
-bones/13/rotation = Quaternion(-0.521053, 0.459871, 0.455687, 0.556212)
+bones/13/rotation = Quaternion(-0.511889, 0.497722, 0.364163, 0.598019)
 bones/13/scale = Vector3(1, 1, 1)
-bones/14/rotation = Quaternion(-0.275416, -0.708394, 0.482643, 0.435178)
-bones/15/rotation = Quaternion(0.174317, -0.0339381, 0.00152017, 0.984103)
+bones/14/rotation = Quaternion(-0.105106, -0.439934, 0.681697, 0.575065)
+bones/15/rotation = Quaternion(0.862748, -0.0174246, 0.00752069, 0.505278)
 bones/15/scale = Vector3(1, 1, 1)
-bones/16/rotation = Quaternion(-0.156494, -0.0609068, 0.0251018, 0.985479)
+bones/16/rotation = Quaternion(0.336187, 0.169808, -0.226419, 0.898264)
 bones/16/scale = Vector3(1, 1, 1)
 bones/18/rotation = Quaternion(-3.22582e-08, 0.696936, 0.717133, -3.08626e-08)
 bones/20/rotation = Quaternion(-3.22582e-08, 0.696936, 0.717133, -3.08626e-08)
@@ -124,19 +125,19 @@ bones/22/rotation = Quaternion(-0.152455, -0.793331, -0.285504, 0.515627)
 bones/22/scale = Vector3(1, 1, 1)
 bones/24/rotation = Quaternion(-0.152455, 0.793331, 0.285504, 0.515627)
 bones/24/scale = Vector3(1, 1, 1)
-bones/26/rotation = Quaternion(0.942874, -0.068841, -0.0604468, 0.320307)
+bones/26/rotation = Quaternion(0.713181, -0.102441, 0.0172879, 0.693239)
 bones/26/scale = Vector3(1, 1, 1)
-bones/27/rotation = Quaternion(0.394274, -0.0744749, -0.0227275, 0.915688)
-bones/28/rotation = Quaternion(-0.736301, -0.0105947, -0.00450928, 0.676556)
+bones/27/rotation = Quaternion(0.474146, -0.0675321, -0.0322987, 0.877258)
+bones/28/rotation = Quaternion(-0.472746, -0.0307054, -0.0138716, 0.880554)
 bones/28/scale = Vector3(1, 1, 1)
-bones/29/rotation = Quaternion(-0.0289297, 0.935574, -0.351774, 0.0109279)
+bones/29/rotation = Quaternion(-0.0300813, 0.972606, -0.230396, 0.00717441)
 bones/31/scale = Vector3(1, 1, 1)
-bones/33/rotation = Quaternion(0.829503, 0.0218393, 0.104887, 0.54813)
-bones/34/rotation = Quaternion(0.899895, 0.023232, 0.0500838, 0.432597)
+bones/33/rotation = Quaternion(0.992397, -0.0218094, 0.116428, -0.0334268)
+bones/34/rotation = Quaternion(0.224863, 0.0323062, 0.00612661, 0.973835)
 bones/34/scale = Vector3(1, 1, 1)
-bones/35/rotation = Quaternion(-0.425329, -0.0368725, 0.0895893, 0.899839)
+bones/35/rotation = Quaternion(-0.269845, 0.00563172, 0.00307225, 0.962883)
 bones/35/scale = Vector3(1, 1, 1)
-bones/36/rotation = Quaternion(0.0202704, 0.965432, -0.259808, -0.0054701)
+bones/36/rotation = Quaternion(0.020008, 0.952968, -0.302344, -0.00636334)
 bones/36/scale = Vector3(1, 1, 1)
 bones/38/rotation = Quaternion(-0.665423, 0.693964, -0.19032, -0.198506)
 bones/38/scale = Vector3(1, 1, 1)
@@ -169,10 +170,6 @@ debug_path_custom_color = Color(1, 0, 0.861831, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_44wik")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
-mesh = SubResource("CapsuleMesh_gujyd")
-surface_material_override/0 = SubResource("StandardMaterial3D_wmkge")
-
 [node name="JumpRaycast" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
 target_position = Vector3(0, -2, 0)
@@ -183,5 +180,16 @@ target_position = Vector3(0, 0, 0.6)
 
 [node name="Damageable" type="Node" parent="."]
 script = ExtResource("3_befjb")
+
+[node name="Hitbox" type="Area3D" parent="."]
+script = ExtResource("4_hylmx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_44wik")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Hitbox/CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_gujyd")
+surface_material_override/0 = SubResource("StandardMaterial3D_wmkge")
 
 [editable path="Liam2"]

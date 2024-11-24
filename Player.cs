@@ -21,7 +21,7 @@ public partial class Player : CharacterBody3D
 	private Vector3 _jumpVelocity;
 	private float _movementSpeed;
 
-	private float _cameraSensitivity = 0.004f;
+	private float _cameraSensitivity = 0.002f;
 	private Camera3D _camera;
 	private Node3D _handle;
 	private bool _chargingJump = false;
@@ -178,9 +178,9 @@ public partial class Player : CharacterBody3D
 
 			Node hit = (Node)result["collider"];
 
-			GD.Print(hit.Name);
-
 			Damageable damageable = hit.GetNodeOrNull<Damageable>("Damageable");
+
+			if (damageable == null) damageable = hit.GetParent().GetNodeOrNull<Damageable>("Damageable");
 
 			if (damageable != null) damageable.Damage(40f);
 		}
