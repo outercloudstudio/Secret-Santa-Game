@@ -56,9 +56,9 @@ public partial class Enemy : CharacterBody3D
 
 		if (IsOnFloor()) _movement = movement;
 
-		// Velocity = _movement * _speed + _jumpVelocity;
+		Velocity = _movement * _speed + _jumpVelocity;
 
-		// MoveAndSlide();
+		MoveAndSlide();
 
 		if (GlobalPosition.Y < -30f) GlobalPosition = _spawnPosition;
 	}
