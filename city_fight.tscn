@@ -1,10 +1,12 @@
-[gd_scene load_steps=16 format=3 uid="uid://b0btl806nuqh6"]
+[gd_scene load_steps=19 format=3 uid="uid://b0btl806nuqh6"]
 
 [ext_resource type="Script" path="res://Player.cs" id="1_uqxd5"]
 [ext_resource type="Shader" path="res://outline.gdshader" id="2_otrtl"]
 [ext_resource type="PackedScene" uid="uid://m8u64h7ecbtk" path="res://city_fight.blend" id="3_bi0rg"]
 [ext_resource type="PackedScene" uid="uid://b5kffvjjh2kib" path="res://models/blasters/blasterH.fbx" id="3_w0uh8"]
 [ext_resource type="PackedScene" uid="uid://81fl28yblv5d" path="res://liam.tscn" id="4_47yvl"]
+[ext_resource type="Texture2D" uid="uid://du0ircd5iil20" path="res://textures/crosshair.png" id="4_u6b1v"]
+[ext_resource type="Shader" path="res://invert.gdshader" id="4_wymne"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_xv2p5"]
 
@@ -22,6 +24,9 @@ shader_parameter/outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_caumd"]
 bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xggwe"]
+shader = ExtResource("4_wymne")
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_325jp"]
 sky_top_color = Color(0.573511, 0.340421, 0.636771, 1)
@@ -95,6 +100,7 @@ surface_material_override/0 = SubResource("ShaderMaterial_nnt3x")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.395, 0.32, -0.198999, -0.349)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Player"]
+layer = 2
 
 [node name="ScreenOverlay" type="Panel" parent="Player/CanvasLayer"]
 modulate = Color(1, 1, 1, 0)
@@ -104,6 +110,24 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_caumd")
+
+[node name="Crosshair" type="CanvasLayer" parent="Player"]
+
+[node name="TextureRect" type="TextureRect" parent="Player/Crosshair"]
+texture_filter = 1
+material = SubResource("ShaderMaterial_xggwe")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -7.0
+offset_top = -7.0
+offset_right = 7.0
+offset_bottom = 7.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_u6b1v")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.501691, -0.153371, 0.851342, -0.463597, 0.783223, 0.414294, -0.730331, -0.602527, 0.321834, 0, 4.84192, 0)
@@ -137,20 +161,24 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -111.88, 0)
 
 [node name="Jump" type="MeshInstance3D" parent="GroundNavigation"]
 transform = Transform3D(12.5353, 1.04931, 0, -1.04931, 12.5353, 0, 0, 0, 12.5791, -60.123, -7.97162, 63.0338)
+visible = false
 mesh = SubResource("BoxMesh_2n8h4")
 skeleton = NodePath("")
 
 [node name="Jump2" type="MeshInstance3D" parent="GroundNavigation"]
 transform = Transform3D(6.75427, 0.502988, -6.1791, 0.0656296, 12.2629, 1.74783, 3.08931, -1.36021, 13.4724, -60.2517, -8.87487, -79.8444)
+visible = false
 mesh = SubResource("BoxMesh_2n8h4")
 skeleton = NodePath("")
 
 [node name="Jump3" type="MeshInstance3D" parent="GroundNavigation"]
 transform = Transform3D(9.46214, 0.774032, -2.97761, -0.105934, 10.3912, 9.99971, 1.33812, -4.65073, 21.847, -99.3249, -5.09525, -61.6047)
+visible = false
 mesh = SubResource("BoxMesh_2n8h4")
 skeleton = NodePath("")
 
 [node name="Jump4" type="MeshInstance3D" parent="GroundNavigation"]
 transform = Transform3D(9.40284, 0.366844, 3.02925, 0.0117542, 11.214, -6.34349, -1.20536, 2.97105, 23.5689, -102.492, -4.0484, -33.8015)
+visible = false
 mesh = SubResource("BoxMesh_2n8h4")
 skeleton = NodePath("")

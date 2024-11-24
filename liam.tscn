@@ -1,7 +1,8 @@
-[gd_scene load_steps=18 format=3 uid="uid://81fl28yblv5d"]
+[gd_scene load_steps=21 format=3 uid="uid://81fl28yblv5d"]
 
 [ext_resource type="Script" path="res://Enemy.cs" id="1_j8jsr"]
 [ext_resource type="PackedScene" uid="uid://bvplknhww2gx7" path="res://Liam.blend" id="1_wd58v"]
+[ext_resource type="Script" path="res://Damageable.cs" id="3_befjb"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xakuc"]
 animation = &"RunFast"
@@ -76,6 +77,15 @@ node_connections = [&"Attack", 0, &"Blend2 3", &"Attack", 1, &"Animation 5", &"B
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_44wik"]
 
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_gujyd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wmkge"]
+transparency = 1
+shading_mode = 0
+disable_ambient_light = true
+disable_fog = true
+albedo_color = Color(1, 0, 0.145098, 0.92549)
+
 [node name="Enemy" type="CharacterBody3D"]
 script = ExtResource("1_j8jsr")
 
@@ -83,30 +93,30 @@ script = ExtResource("1_j8jsr")
 transform = Transform3D(2.00887, 0, 0, 0, 2.00887, 0, 0, 0, 2.00887, 0, 0, 0)
 
 [node name="Liam" parent="Liam2" index="0"]
-transform = Transform3D(0.991174, 0.0205229, -0.130968, -0.0578654, 0.955835, -0.288148, 0.11927, 0.293184, 0.948587, 0.0136507, -0.0500741, -0.278345)
+transform = Transform3D(0.987247, -0.0161839, 0.158371, 0.0632638, 0.952777, -0.297006, -0.146086, 0.303238, 0.94165, 0.0333515, -0.0482368, -0.341466)
 
 [node name="Skeleton3D" parent="Liam2/Liam" index="0"]
 bones/0/scale = Vector3(1, 1, 1)
-bones/1/rotation = Quaternion(0.000994414, -0.0108862, 0.0351788, 0.999321)
-bones/2/rotation = Quaternion(-0.0402658, -0.0111251, 0.0120442, 0.999054)
-bones/3/rotation = Quaternion(0.038904, -0.0119431, 0.011178, 0.999109)
-bones/4/rotation = Quaternion(0.178595, 0.00927594, 0.00842989, 0.983843)
-bones/5/rotation = Quaternion(-0.118273, 0.0101316, 0.00737958, 0.992902)
+bones/1/rotation = Quaternion(-0.00959358, -0.0638024, -0.0176476, 0.99776)
+bones/2/rotation = Quaternion(-0.0385788, -0.0284681, -0.00566927, 0.998834)
+bones/3/rotation = Quaternion(0.0410076, -0.0271091, -0.00885935, 0.998752)
+bones/4/rotation = Quaternion(0.185213, 0.00128459, 0.00459103, 0.982687)
+bones/5/rotation = Quaternion(-0.111607, 0.00177255, 0.00442562, 0.993741)
 bones/5/scale = Vector3(1, 1, 1)
-bones/6/rotation = Quaternion(-0.117131, 0.00856604, 0.00915038, 0.993037)
-bones/8/rotation = Quaternion(-0.575507, -0.37229, -0.473859, 0.552856)
-bones/9/rotation = Quaternion(-0.0724206, 0.667986, -0.628866, 0.391251)
+bones/6/rotation = Quaternion(-0.110463, 0.000910229, 0.00467959, 0.993869)
+bones/8/rotation = Quaternion(-0.556489, -0.402478, -0.478152, 0.547451)
+bones/9/rotation = Quaternion(0.0169282, 0.490374, -0.650243, 0.580027)
 bones/9/scale = Vector3(1, 1, 1)
-bones/10/rotation = Quaternion(0.0726966, 0.0334651, -0.000621569, 0.996792)
+bones/10/rotation = Quaternion(0.530752, 0.0284375, -0.00453981, 0.847038)
 bones/10/scale = Vector3(1, 1, 1)
-bones/11/rotation = Quaternion(0.0887939, -0.268353, 0.0812542, 0.955772)
+bones/11/rotation = Quaternion(0.165936, -0.254361, 0.359433, 0.882368)
 bones/11/scale = Vector3(1, 1, 1)
-bones/13/rotation = Quaternion(-0.546067, 0.410615, 0.501984, 0.530299)
+bones/13/rotation = Quaternion(-0.521053, 0.459871, 0.455687, 0.556212)
 bones/13/scale = Vector3(1, 1, 1)
-bones/14/rotation = Quaternion(-0.176658, -0.729834, 0.490355, 0.442364)
-bones/15/rotation = Quaternion(0.477356, -0.0302849, 0.00416165, 0.878178)
+bones/14/rotation = Quaternion(-0.275416, -0.708394, 0.482643, 0.435178)
+bones/15/rotation = Quaternion(0.174317, -0.0339381, 0.00152017, 0.984103)
 bones/15/scale = Vector3(1, 1, 1)
-bones/16/rotation = Quaternion(0.332025, 0.233294, -0.210015, 0.889509)
+bones/16/rotation = Quaternion(-0.156494, -0.0609068, 0.0251018, 0.985479)
 bones/16/scale = Vector3(1, 1, 1)
 bones/18/rotation = Quaternion(-3.22582e-08, 0.696936, 0.717133, -3.08626e-08)
 bones/20/rotation = Quaternion(-3.22582e-08, 0.696936, 0.717133, -3.08626e-08)
@@ -114,19 +124,19 @@ bones/22/rotation = Quaternion(-0.152455, -0.793331, -0.285504, 0.515627)
 bones/22/scale = Vector3(1, 1, 1)
 bones/24/rotation = Quaternion(-0.152455, 0.793331, 0.285504, 0.515627)
 bones/24/scale = Vector3(1, 1, 1)
-bones/26/rotation = Quaternion(0.942312, 0.00278839, -0.179868, 0.282291)
+bones/26/rotation = Quaternion(0.942874, -0.068841, -0.0604468, 0.320307)
 bones/26/scale = Vector3(1, 1, 1)
-bones/27/rotation = Quaternion(0.883875, -0.030934, -0.0648005, 0.462178)
-bones/28/rotation = Quaternion(-0.325319, -0.070302, -0.0604094, 0.94105)
+bones/27/rotation = Quaternion(0.394274, -0.0744749, -0.0227275, 0.915688)
+bones/28/rotation = Quaternion(-0.736301, -0.0105947, -0.00450928, 0.676556)
 bones/28/scale = Vector3(1, 1, 1)
-bones/29/rotation = Quaternion(-0.0303492, 0.981203, -0.190482, 0.00593998)
+bones/29/rotation = Quaternion(-0.0289297, 0.935574, -0.351774, 0.0109279)
 bones/31/scale = Vector3(1, 1, 1)
-bones/33/rotation = Quaternion(0.883182, 0.105862, 0.0449972, 0.454706)
-bones/34/rotation = Quaternion(0.419555, -0.0466334, -0.0150224, 0.906407)
+bones/33/rotation = Quaternion(0.829503, 0.0218393, 0.104887, 0.54813)
+bones/34/rotation = Quaternion(0.899895, 0.023232, 0.0500838, 0.432597)
 bones/34/scale = Vector3(1, 1, 1)
-bones/35/rotation = Quaternion(-0.662197, -0.0264064, 0.0989523, 0.742298)
+bones/35/rotation = Quaternion(-0.425329, -0.0368725, 0.0895893, 0.899839)
 bones/35/scale = Vector3(1, 1, 1)
-bones/36/rotation = Quaternion(0.020027, 0.953872, -0.29948, -0.00630298)
+bones/36/rotation = Quaternion(0.0202704, 0.965432, -0.259808, -0.0054701)
 bones/36/scale = Vector3(1, 1, 1)
 bones/38/rotation = Quaternion(-0.665423, 0.693964, -0.19032, -0.198506)
 bones/38/scale = Vector3(1, 1, 1)
@@ -159,6 +169,10 @@ debug_path_custom_color = Color(1, 0, 0.861831, 1)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_44wik")
 
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D"]
+mesh = SubResource("CapsuleMesh_gujyd")
+surface_material_override/0 = SubResource("StandardMaterial3D_wmkge")
+
 [node name="JumpRaycast" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
 target_position = Vector3(0, -2, 0)
@@ -166,5 +180,8 @@ target_position = Vector3(0, -2, 0)
 [node name="WallRaycast" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.414752, 0)
 target_position = Vector3(0, 0, 0.6)
+
+[node name="Damageable" type="Node" parent="."]
+script = ExtResource("3_befjb")
 
 [editable path="Liam2"]

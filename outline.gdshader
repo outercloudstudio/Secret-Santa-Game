@@ -6,7 +6,7 @@ render_mode unshaded;
 	Inspired by Yui Kinomoto @arlez80, lukky_nl (YT), Robin Seibold (YT)
 	Uses Sobel Edge detection on a normal and depth texture
 	Written by William Li (LoudFlameLava)
-	
+
 	MIT License
 */
 
@@ -44,13 +44,13 @@ float edge_value_normal(sampler2D normal_tex, vec2 uv, vec2 pixel_size, mat3 sob
 	vec3 ne = texture(NORMAL_TEXTURE, uv + vec2(pixel_size.x, -pixel_size.y)).rgb;
 	vec3 sw = texture(NORMAL_TEXTURE, uv + vec2(-pixel_size.x, pixel_size.y)).rgb;
 	vec3 se = texture(NORMAL_TEXTURE, uv + vec2(pixel_size.x, pixel_size.y)).rgb;
-	
+
 	mat3 error_mat = mat3(
 		vec3(length(normal - nw), length(normal - n), length(normal - ne)),
 		vec3(length(normal - w), 0.0, length(normal - e)),
 		vec3(length(normal - sw), length(normal - s), length(normal - se))
 	);
-	
+
 	output += dot(sobel[0], error_mat[0]);
 	output += dot(sobel[1], error_mat[1]);
 	output += dot(sobel[2], error_mat[2]);
@@ -77,13 +77,13 @@ float edge_value_depth(sampler2D depth_tex, vec2 uv, vec2 pixel_size, mat3 sobel
 	float nw = get_depth(depth_tex, uv + vec2(-pixel_size.x, -pixel_size.y), inv_projection_matrix);
 	float se = get_depth(depth_tex, uv + vec2(pixel_size.x, pixel_size.y), inv_projection_matrix);
 	float sw = get_depth(depth_tex, uv + vec2(-pixel_size.x, pixel_size.y), inv_projection_matrix);
-	
+
 	mat3 error_mat = mat3(
 		vec3((depth - nw)/depth, (depth - n)/depth, (depth - ne)/depth),
 		vec3((depth - w)/depth, 0.0, (depth - e)/depth),
 		vec3((depth - sw)/depth, (depth - s)/depth, (depth - se)/depth)
 	);
-	
+
 	output += dot(sobel[0], error_mat[0]);
 	output += dot(sobel[1], error_mat[1]);
 	output += dot(sobel[2], error_mat[2]);
@@ -93,14 +93,14 @@ float edge_value_depth(sampler2D depth_tex, vec2 uv, vec2 pixel_size, mat3 sobel
 vec3 get_world_position(vec2 screen_uv, float depth, mat4 _INV_PROJECTION_MATRIX, mat4 _INV_VIEW_MATRIX) {
     // Convert screen UV to NDC
     vec4 ndc = vec4(screen_uv * 2.0 - 1.0, depth, 1.0);
-    
+
     // Convert NDC to view space
     vec4 view_space_pos = _INV_PROJECTION_MATRIX * ndc;
     view_space_pos /= view_space_pos.w;
-    
+
     // Convert view space to world space
     vec4 world_space_pos = _INV_VIEW_MATRIX * view_space_pos;
-    
+
     return world_space_pos.xyz;
 }
 
@@ -122,7 +122,7 @@ void fragment() {
 	if (has_outline < 0.1){
 		ALPHA = 0.0;
 	}
-	
+
 	float worldY = get_world_position(SCREEN_UV, texture(DEPTH_TEXTURE, SCREEN_UV).x, INV_PROJECTION_MATRIX, INV_VIEW_MATRIX).y;
 
 	ALPHA *= clamp((worldY + 70.0) / 70.0, 0.0, 1.0);

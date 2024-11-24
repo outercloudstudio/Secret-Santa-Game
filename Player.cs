@@ -158,23 +158,7 @@ public partial class Player : CharacterBody3D
 
 			_dashVelocity = new Vector3(dashImpulse.X, 0, dashImpulse.Z);
 			_jumpVelocity = new Vector3(0, dashImpulse.Y + BaseJumpLift, 0);
-
-
-			// _jumpCharge = BaseJump;
-			// _chargingJump = true;
 		}
-
-		// if (@event.IsActionPressed("dash") && (RecentlyTouchingFloor() || RecentlyRanWall()))
-		// {
-		// 	Vector3 dashImpulse = _lastWallRunningNormal * JumpVelocity * (RecentlyRanWall() ? 1f : 0f);
-
-		// 	_dashVelocity = new Vector3(dashImpulse.X, 0, dashImpulse.Z);
-		// 	_jumpVelocity = new Vector3(0, dashImpulse.Y + BaseJumpLift, 0);
-
-
-		// 	// _jumpCharge = BaseJump;
-		// 	// _chargingJump = true;
-		// }
 
 		if (@event.IsActionPressed("dash") && RecentlyRanWall() && (_lastWallRunningNormal == Vector3.Zero || _lastWallRunningNormal.Dot(-_camera.GlobalBasis.Z) >= 0))
 		{
@@ -184,18 +168,22 @@ public partial class Player : CharacterBody3D
 			_jumpVelocity += new Vector3(0, dashImpulse.Y, 0);
 		}
 
-		// if (@event.IsActionReleased("jump"))
-		// {
-		// 	_chargingJump = false;
+		if (@event.IsActionPressed("shoot"))
+		{
+			PhysicsDirectSpaceState3D spaceState = GetWorld3D().DirectSpaceState;
+			PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(_camera.GlobalPosition, _camera.GlobalPosition + -_camera.GlobalBasis.Z * 200f);
+			Dictionary result = spaceState.IntersectRay(query);
 
-		// 	if (RecentlyTouchingFloor() || (RecentlyRanWall() && (_lastWallRunningNormal == Vector3.Zero || _lastWallRunningNormal.Dot(-_camera.GlobalBasis.Z) >= 0)))
-		// 	{
-		// 		Vector3 dashImpulse = -_camera.GlobalBasis.Z * JumpVelocity * _jumpCharge;
+			if (result.Count == 0) return;
 
-		// 		// _dashVelocity = new Vector3(dashImpulse.X, 0, dashImpulse.Z);
-		// 		// _jumpVelocity = new Vector3(0, dashImpulse.Y, 0);
-		// 	}
-		// }
+			Node hit = (Node)result["collider"];
+
+			GD.Print(hit.Name);
+
+			Damageable damageable = hit.GetNodeOrNull<Damageable>("Damageable");
+
+			if (damageable != null) damageable.Damage(40f);
+		}
 	}
 
 	public override void _Process(double delta)
