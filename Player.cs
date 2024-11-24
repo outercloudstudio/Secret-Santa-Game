@@ -9,6 +9,8 @@ public partial class Player : CharacterBody3D
 
 	[Export] public Panel ScreenOverlay;
 	[Export] public Node3D SpawnPosition;
+	[Export] public PackedScene BeamScene;
+	[Export] public Node3D ShootPosition;
 
 	public float Speed = 10.0f;
 	public float MaxSpeed = 30.0f;
@@ -179,9 +181,16 @@ public partial class Player : CharacterBody3D
 			query.CollideWithAreas = true;
 			Dictionary result = spaceState.IntersectRay(query);
 
+			Beam beam = BeamScene.Instantiate<Beam>();
+			GetParent().AddChild(beam);
+
+			beam.Source = ShootPosition;
+			beam.Target = _camera.GlobalPosition + -_camera.GlobalBasis.Z * 200f;
+
 			if (result.Count == 0) return;
 
 			Node hit = (Node)result["collider"];
+			Vector3 hitPosition = (Vector3)result["position"];
 
 			Damageable damageable = hit.GetNodeOrNull<Damageable>("Damageable");
 
@@ -191,6 +200,8 @@ public partial class Player : CharacterBody3D
 
 			_handleVelocity += _camera.GlobalBasis.Z * 20f;
 			_handleAngularVelocity += new Vector3(25f, 0, 0);
+
+			beam.Target = hitPosition;
 		}
 	}
 

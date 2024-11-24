@@ -1,7 +1,8 @@
-[gd_scene load_steps=19 format=3 uid="uid://b0btl806nuqh6"]
+[gd_scene load_steps=20 format=3 uid="uid://b0btl806nuqh6"]
 
 [ext_resource type="Script" path="res://Player.cs" id="1_uqxd5"]
 [ext_resource type="Shader" path="res://outline.gdshader" id="2_otrtl"]
+[ext_resource type="PackedScene" uid="uid://uita6hnuthsk" path="res://beam.tscn" id="2_w06cf"]
 [ext_resource type="PackedScene" uid="uid://m8u64h7ecbtk" path="res://city_fight.blend" id="3_bi0rg"]
 [ext_resource type="PackedScene" uid="uid://b5kffvjjh2kib" path="res://models/blasters/blasterH.fbx" id="3_w0uh8"]
 [ext_resource type="PackedScene" uid="uid://81fl28yblv5d" path="res://liam.tscn" id="4_47yvl"]
@@ -68,7 +69,7 @@ agent_max_climb = 5.0
 [node name="SpawnPosition" type="Node3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 10.1887, 20.5442, 1.17776)
 
-[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("ScreenOverlay", "SpawnPosition")]
+[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("ScreenOverlay", "SpawnPosition", "ShootPosition")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 10.1887, 20.5442, 1.1942)
 axis_lock_angular_x = true
 axis_lock_angular_z = true
@@ -78,6 +79,8 @@ platform_on_leave = 2
 script = ExtResource("1_uqxd5")
 ScreenOverlay = NodePath("CanvasLayer/ScreenOverlay")
 SpawnPosition = NodePath("../SpawnPosition")
+BeamScene = ExtResource("2_w06cf")
+ShootPosition = NodePath("Camera3D/Handle/Grip/blasterH/ShootPosition")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
 mesh = SubResource("CapsuleMesh_xv2p5")
@@ -101,6 +104,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32, -0.229269, -0.310672)
 
 [node name="blasterH" parent="Player/Camera3D/Handle/Grip" instance=ExtResource("3_w0uh8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.395, -5.96046e-08, 0.0302696, -0.0383282)
+
+[node name="ShootPosition" type="Node3D" parent="Player/Camera3D/Handle/Grip/blasterH"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.217234)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Player"]
 layer = 2
