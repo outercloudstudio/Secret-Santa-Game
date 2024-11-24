@@ -19,8 +19,8 @@ public partial class DynamicHitbox : Node3D
 
 	public override void _Process(double delta)
 	{
-		((CapsuleShape3D)_collisionShape.Shape).Radius = _baseRadius + GlobalPosition.DistanceTo(Player.Me.GlobalPosition) / 20f / 2f;
-		((CapsuleShape3D)_collisionShape.Shape).Height = _baseHeight + GlobalPosition.DistanceTo(Player.Me.GlobalPosition) / 20f;
+		((CapsuleShape3D)_collisionShape.Shape).Radius = _baseRadius + GlobalPosition.DistanceTo(Player.Me.GlobalPosition) / 15f / 2f;
+		((CapsuleShape3D)_collisionShape.Shape).Height = _baseHeight + GlobalPosition.DistanceTo(Player.Me.GlobalPosition) / 15f;
 
 		((CapsuleMesh)_debugShape.Mesh).Radius = ((CapsuleShape3D)_collisionShape.Shape).Radius;
 		((CapsuleMesh)_debugShape.Mesh).Height = ((CapsuleShape3D)_collisionShape.Shape).Height;

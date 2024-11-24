@@ -24,6 +24,7 @@ public partial class Player : CharacterBody3D
 	private float _cameraSensitivity = 0.002f;
 	private Camera3D _camera;
 	private Node3D _handle;
+	private Node3D _grip;
 	private bool _chargingJump = false;
 	private float _jumpCharge = 0f;
 	private float _onFloorTimer = 0f;
@@ -40,11 +41,13 @@ public partial class Player : CharacterBody3D
 
 	private Vector3 _lastVelocity;
 	private Vector3 _handleVelocity;
+	private Vector3 _handleAngularVelocity;
 
 	public override void _Ready()
 	{
 		_camera = GetNode<Camera3D>("Camera3D");
 		_handle = _camera.GetNode<Node3D>("Handle");
+		_grip = _handle.GetNode<Node3D>("Grip");
 
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 
@@ -136,6 +139,7 @@ public partial class Player : CharacterBody3D
 		MoveAndSlide();
 
 		_handleVelocity = MathHelper.FixedLerp(_handleVelocity, Velocity, 8, (float)delta);
+		_handleAngularVelocity = MathHelper.FixedLerp(_handleAngularVelocity, Vector3.Zero, 8, (float)delta);
 	}
 
 	public override void _Input(InputEvent @event)
@@ -172,6 +176,7 @@ public partial class Player : CharacterBody3D
 		{
 			PhysicsDirectSpaceState3D spaceState = GetWorld3D().DirectSpaceState;
 			PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(_camera.GlobalPosition, _camera.GlobalPosition + -_camera.GlobalBasis.Z * 200f);
+			query.CollideWithAreas = true;
 			Dictionary result = spaceState.IntersectRay(query);
 
 			if (result.Count == 0) return;
@@ -183,6 +188,9 @@ public partial class Player : CharacterBody3D
 			if (damageable == null) damageable = hit.GetParent().GetNodeOrNull<Damageable>("Damageable");
 
 			if (damageable != null) damageable.Damage(40f);
+
+			_handleVelocity += _camera.GlobalBasis.Z * 20f;
+			_handleAngularVelocity += new Vector3(25f, 0, 0);
 		}
 	}
 
@@ -225,8 +233,10 @@ public partial class Player : CharacterBody3D
 		_camera.Rotation = new Vector3(_camera.Rotation.X, _camera.Rotation.Y, MathHelper.FixedLerp(_camera.Rotation.Z, Mathf.DegToRad(_cameraWallTilt * 10f), 8f, (float)delta));
 
 		_handle.GlobalPosition += (_handleVelocity - Velocity) * (float)delta * 0.2f;
+		_grip.Rotation += _handleAngularVelocity * (float)delta;
 
 		_handle.Position = MathHelper.FixedLerp(_handle.Position, Vector3.Zero, 16f, (float)delta);
+		_grip.Rotation = MathHelper.FixedLerp(_grip.Rotation, Vector3.Zero, 24f, (float)delta);
 	}
 
 	private void HandleScreenshake(float delta)
