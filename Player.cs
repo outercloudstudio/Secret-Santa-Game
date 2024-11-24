@@ -11,6 +11,7 @@ public partial class Player : CharacterBody3D
 	public float Speed = 10.0f;
 	public float MaxSpeed = 30.0f;
 	public float BaseJump = 0.5f;
+	public float BaseJumpLift = 30f;
 	public float JumpVelocity = 50f;
 
 	private Vector3 _dashVelocity;
@@ -18,7 +19,7 @@ public partial class Player : CharacterBody3D
 	private Vector3 _jumpVelocity;
 	private float _movementSpeed;
 
-	private float _cameraSensitivity = 0.008f;
+	private float _cameraSensitivity = 0.004f;
 	private Camera3D _camera;
 	private RayCast3D _floorRaycast;
 	private bool _chargingJump = false;
@@ -142,24 +143,50 @@ public partial class Player : CharacterBody3D
 
 		if (_spawnFogActive) return;
 
-		if (@event.IsActionPressed("jump"))
+		if (@event.IsActionPressed("jump") && (RecentlyTouchingFloor() || RecentlyRanWall()))
 		{
-			_jumpCharge = BaseJump;
-			_chargingJump = true;
+			Vector3 dashImpulse = _lastWallRunningNormal * JumpVelocity * (RecentlyRanWall() ? 1f : 0f);
+
+			_dashVelocity = new Vector3(dashImpulse.X, 0, dashImpulse.Z);
+			_jumpVelocity = new Vector3(0, dashImpulse.Y + BaseJumpLift, 0);
+
+
+			// _jumpCharge = BaseJump;
+			// _chargingJump = true;
 		}
 
-		if (@event.IsActionReleased("jump"))
+		// if (@event.IsActionPressed("dash") && (RecentlyTouchingFloor() || RecentlyRanWall()))
+		// {
+		// 	Vector3 dashImpulse = _lastWallRunningNormal * JumpVelocity * (RecentlyRanWall() ? 1f : 0f);
+
+		// 	_dashVelocity = new Vector3(dashImpulse.X, 0, dashImpulse.Z);
+		// 	_jumpVelocity = new Vector3(0, dashImpulse.Y + BaseJumpLift, 0);
+
+
+		// 	// _jumpCharge = BaseJump;
+		// 	// _chargingJump = true;
+		// }
+
+		if (@event.IsActionPressed("dash") && RecentlyRanWall() && (_lastWallRunningNormal == Vector3.Zero || _lastWallRunningNormal.Dot(-_camera.GlobalBasis.Z) >= 0))
 		{
-			_chargingJump = false;
+			Vector3 dashImpulse = -_camera.GlobalBasis.Z * JumpVelocity * 1f;
 
-			if (RecentlyTouchingFloor() || (RecentlyRanWall() && (_lastWallRunningNormal == Vector3.Zero || _lastWallRunningNormal.Dot(-_camera.GlobalBasis.Z) >= 0)))
-			{
-				Vector3 dashImpulse = -_camera.GlobalBasis.Z * JumpVelocity * _jumpCharge;
-
-				_dashVelocity = new Vector3(dashImpulse.X, 0, dashImpulse.Z);
-				_jumpVelocity = new Vector3(0, dashImpulse.Y, 0);
-			}
+			_dashVelocity += new Vector3(dashImpulse.X, 0, dashImpulse.Z);
+			_jumpVelocity += new Vector3(0, dashImpulse.Y, 0);
 		}
+
+		// if (@event.IsActionReleased("jump"))
+		// {
+		// 	_chargingJump = false;
+
+		// 	if (RecentlyTouchingFloor() || (RecentlyRanWall() && (_lastWallRunningNormal == Vector3.Zero || _lastWallRunningNormal.Dot(-_camera.GlobalBasis.Z) >= 0)))
+		// 	{
+		// 		Vector3 dashImpulse = -_camera.GlobalBasis.Z * JumpVelocity * _jumpCharge;
+
+		// 		// _dashVelocity = new Vector3(dashImpulse.X, 0, dashImpulse.Z);
+		// 		// _jumpVelocity = new Vector3(0, dashImpulse.Y, 0);
+		// 	}
+		// }
 	}
 
 	public override void _Process(double delta)
