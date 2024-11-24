@@ -22,6 +22,7 @@ public partial class Player : CharacterBody3D
 	private float _cameraSensitivity = 0.004f;
 	private Camera3D _camera;
 	private RayCast3D _floorRaycast;
+	private Node3D _handle;
 	private bool _chargingJump = false;
 	private float _jumpCharge = 0f;
 	private float _onFloorTimer = 0f;
@@ -36,10 +37,14 @@ public partial class Player : CharacterBody3D
 	private float _shakeIntensity = 0f;
 	private RandomNumberGenerator _random = new RandomNumberGenerator();
 
+	private Vector3 _lastVelocity;
+	private Vector3 _handleVelocity;
+
 	public override void _Ready()
 	{
 		_camera = GetNode<Camera3D>("Camera3D");
 		_floorRaycast = GetNode<RayCast3D>("FloorRaycast");
+		_handle = _camera.GetNode<Node3D>("Handle");
 
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 	}
@@ -127,6 +132,8 @@ public partial class Player : CharacterBody3D
 		Velocity = _dashVelocity + _movementVelocity + _jumpVelocity;
 
 		MoveAndSlide();
+
+		_handleVelocity = MathHelper.FixedLerp(_handleVelocity, Velocity, 8, (float)delta);
 	}
 
 	public override void _Input(InputEvent @event)
@@ -226,6 +233,10 @@ public partial class Player : CharacterBody3D
 		}
 
 		_camera.Rotation = new Vector3(_camera.Rotation.X, _camera.Rotation.Y, MathHelper.FixedLerp(_camera.Rotation.Z, Mathf.DegToRad(_cameraWallTilt * 10f), 8f, (float)delta));
+
+		_handle.GlobalPosition += (_handleVelocity - Velocity) * (float)delta * 0.2f;
+
+		_handle.Position = MathHelper.FixedLerp(_handle.Position, Vector3.Zero, 16f, (float)delta);
 	}
 
 	private void HandleScreenshake(float delta)

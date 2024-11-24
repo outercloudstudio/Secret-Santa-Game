@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://b0btl806nuqh6"]
+[gd_scene load_steps=14 format=3 uid="uid://b0btl806nuqh6"]
 
 [ext_resource type="Script" path="res://Player.cs" id="1_uqxd5"]
 [ext_resource type="Shader" path="res://outline.gdshader" id="2_otrtl"]
 [ext_resource type="PackedScene" uid="uid://m8u64h7ecbtk" path="res://city_fight.blend" id="3_bi0rg"]
+[ext_resource type="PackedScene" uid="uid://b5kffvjjh2kib" path="res://models/blasters/blasterH.fbx" id="3_w0uh8"]
 [ext_resource type="PackedScene" uid="uid://81fl28yblv5d" path="res://liam.tscn" id="4_47yvl"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_xv2p5"]
@@ -76,9 +77,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.592913, 0)
 fov = 90.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D/Camera3D"]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, -0.428864)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, -0.1)
 mesh = SubResource("QuadMesh_u0cuk")
 surface_material_override/0 = SubResource("ShaderMaterial_nnt3x")
+
+[node name="Handle" type="Node3D" parent="CharacterBody3D/Camera3D"]
+
+[node name="blasterH" parent="CharacterBody3D/Camera3D/Handle" instance=ExtResource("3_w0uh8")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.395, 0.32, -0.198999, -0.349)
 
 [node name="FloorRaycast" type="RayCast3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.972423, 0)
