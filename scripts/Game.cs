@@ -41,7 +41,8 @@ public partial class Game : Node3D
 
 	public static void Start()
 	{
-		s_Difficulty = 5f;
+		// s_Difficulty = 5f;
+		s_Difficulty = 30f;
 
 		StartRound(s_Difficulty);
 	}

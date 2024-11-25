@@ -14,13 +14,13 @@ public partial class Enemy : CharacterBody3D
 	private Vector3 _jumpVelocity;
 	private Vector3 _movement;
 	private bool _inRange;
-
+	private float _timerTillPathRecalculation;
+	private Vector3 _nextPathPosition;
 
 	private NavigationAgent3D _navigationAgent;
 	private RayCast3D _jumpRaycast;
 	private RayCast3D _wallRaycast;
 	private Area3D _damageArea;
-
 
 	public override void _Ready()
 	{
@@ -32,6 +32,8 @@ public partial class Enemy : CharacterBody3D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		_timerTillPathRecalculation -= (float)delta;
+
 		_navigationAgent.TargetPosition = Player.Me.GlobalPosition;
 
 		if (_navigationAgent.IsNavigationFinished()) return;
@@ -45,7 +47,12 @@ public partial class Enemy : CharacterBody3D
 			_inRange = Player.Me.GlobalPosition.DistanceTo(GlobalPosition) <= TargetPlayerDistance + TargetPlayerDistanceBuffer;
 		}
 
-		Vector3 nextPathPosition = _navigationAgent.GetNextPathPosition();
+		if (_timerTillPathRecalculation <= 0)
+		{
+			_nextPathPosition = _navigationAgent.GetNextPathPosition();
+
+			_timerTillPathRecalculation = GD.Randf() * 2f + 0.2f;
+		}
 
 		if (IsOnFloor())
 		{
@@ -56,7 +63,7 @@ public partial class Enemy : CharacterBody3D
 			_jumpVelocity += GetGravity() * 6f * (float)delta;
 		}
 
-		Vector3 movement = GlobalPosition.DirectionTo(nextPathPosition);
+		Vector3 movement = GlobalPosition.DirectionTo(_nextPathPosition);
 		movement.Y = 0;
 		movement = movement.Normalized();
 
