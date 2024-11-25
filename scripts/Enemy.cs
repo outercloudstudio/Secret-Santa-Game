@@ -3,22 +3,21 @@ using System;
 
 public partial class Enemy : CharacterBody3D
 {
+	[Export] public float Speed = 20f;
+	[Export] public float WallRaycastLength = 0.7f;
 	[Export] public AnimationTree AnimationTree;
 
-	private float _speed = 20.0f;
 	public float _baseJumpLift = 30f;
 
 	private Vector3 _jumpVelocity;
 	private Vector3 _movement;
-	private float _attackCooldown;
-	private float _attackTimer;
+
 
 	private NavigationAgent3D _navigationAgent;
 	private RayCast3D _jumpRaycast;
 	private RayCast3D _wallRaycast;
 	private Area3D _damageArea;
 
-	private Udils.ProgressableAction _attack;
 
 	public override void _Ready()
 	{
@@ -26,23 +25,6 @@ public partial class Enemy : CharacterBody3D
 		_jumpRaycast = GetNode<RayCast3D>("JumpRaycast");
 		_wallRaycast = GetNode<RayCast3D>("WallRaycast");
 		_damageArea = GetNode<Area3D>("DamageArea");
-
-		_attack = new Udils.ProgressableAction()
-		.Add(0f, () =>
-		{
-			_attackCooldown = 1f;
-
-			AnimationTree.Set("parameters/Attack/request", (int)AnimationNodeOneShot.OneShotRequest.Fire);
-		})
-		.Add(0.3667f, () =>
-		{
-			foreach (Node3D body in _damageArea.GetOverlappingBodies())
-			{
-				if (!(body is Player player)) continue;
-
-				player.GetNode<Damageable>("Damageable").Damage(20f);
-			}
-		});
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -67,7 +49,7 @@ public partial class Enemy : CharacterBody3D
 		movement = movement.Normalized();
 
 		_jumpRaycast.GlobalPosition = GlobalPosition + movement;
-		_wallRaycast.TargetPosition = movement * 0.7f;
+		_wallRaycast.TargetPosition = movement * WallRaycastLength;
 
 		bool shouldJump = !_jumpRaycast.IsColliding() || _wallRaycast.IsColliding();
 
@@ -78,7 +60,7 @@ public partial class Enemy : CharacterBody3D
 
 		if (IsOnFloor()) _movement = movement;
 
-		Velocity = _movement * _speed + _jumpVelocity;
+		Velocity = _movement * Speed + _jumpVelocity;
 
 		MoveAndSlide();
 
@@ -87,21 +69,6 @@ public partial class Enemy : CharacterBody3D
 		UpdateAnimations((float)delta);
 
 		_damageArea.GlobalPosition = GlobalPosition + movement;
-	}
-
-	public override void _Process(double delta)
-	{
-		_attack.Update((float)delta);
-
-		if (_attack.IsInProgress()) return;
-
-		_attackCooldown -= (float)delta;
-
-		if (_attackCooldown > 0) return;
-
-		if (GlobalPosition.DistanceTo(Player.Me.GlobalPosition) > 3f) return;
-
-		_attack.Start();
 	}
 
 	public void Died()

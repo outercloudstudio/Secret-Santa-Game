@@ -1,10 +1,11 @@
-[gd_scene load_steps=25 format=3 uid="uid://81fl28yblv5d"]
+[gd_scene load_steps=26 format=3 uid="uid://81fl28yblv5d"]
 
 [ext_resource type="Script" path="res://scripts/Enemy.cs" id="1_j8jsr"]
 [ext_resource type="PackedScene" uid="uid://bvplknhww2gx7" path="res://models/Liam.blend" id="1_wd58v"]
 [ext_resource type="Script" path="res://scripts/Damageable.cs" id="3_befjb"]
 [ext_resource type="Script" path="res://scripts/DynamicHitbox.cs" id="4_hylmx"]
 [ext_resource type="Material" uid="uid://c8vgpij3ryu5j" path="res://material_debug.tres" id="5_wif3l"]
+[ext_resource type="Script" path="res://scripts/MeleeAttack.cs" id="6_vj6cu"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xakuc"]
 animation = &"RunFast"
@@ -218,6 +219,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.86983, 0)
 visible = false
 mesh = SubResource("BoxMesh_f6j3p")
 surface_material_override/0 = ExtResource("5_wif3l")
+
+[node name="MeleeAttack" type="Node3D" parent="." node_paths=PackedStringArray("AnimationTree")]
+script = ExtResource("6_vj6cu")
+AnimationTree = NodePath("../AnimationTree")
 
 [connection signal="Killed" from="Damageable" to="." method="Died"]
 

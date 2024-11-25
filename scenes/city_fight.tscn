@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://b0btl806nuqh6"]
+[gd_scene load_steps=11 format=3 uid="uid://b0btl806nuqh6"]
 
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_6ctq6"]
 [ext_resource type="PackedScene" uid="uid://mcahqrmwo46w" path="res://scenes/player.tscn" id="1_us7lh"]
 [ext_resource type="PackedScene" uid="uid://m8u64h7ecbtk" path="res://models/city_fight.blend" id="3_bi0rg"]
-[ext_resource type="PackedScene" uid="uid://81fl28yblv5d" path="res://scenes/enemy.tscn" id="3_e2vnu"]
+[ext_resource type="PackedScene" uid="uid://81fl28yblv5d" path="res://scenes/enemies/enemy_normal.tscn" id="3_e2vnu"]
+[ext_resource type="PackedScene" uid="uid://cvj4rq3dej2jw" path="res://scenes/enemies/enemy_large.tscn" id="3_jbo8c"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_325jp"]
 sky_top_color = Color(0.573511, 0.340421, 0.636771, 1)
@@ -42,7 +43,8 @@ agent_max_climb = 5.0
 
 [node name="Prototype" type="Node3D" node_paths=PackedStringArray("SpawnPoint", "NavigationRegion")]
 script = ExtResource("1_6ctq6")
-EnemyScene = ExtResource("3_e2vnu")
+EnemyNormalScene = ExtResource("3_e2vnu")
+EnemyLargeScene = ExtResource("3_jbo8c")
 SpawnPoint = NodePath("SpawnPosition")
 NavigationRegion = NodePath("GroundNavigation")
 

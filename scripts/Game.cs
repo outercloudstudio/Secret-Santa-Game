@@ -1,11 +1,13 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class Game : Node3D
 {
 	public static Game Me;
 
-	[Export] public PackedScene EnemyScene;
+	[Export] public PackedScene EnemyNormalScene;
+	[Export] public PackedScene EnemyLargeScene;
 	[Export] public Node3D SpawnPoint;
 	[Export] public NavigationRegion3D NavigationRegion;
 
@@ -61,13 +63,31 @@ public partial class Game : Node3D
 	{
 		Me.NavigationRegion.BakeNavigationMesh(false);
 
-		for (int i = 0; i < difficulty; i++)
+		for (float usedScore = 0; usedScore < difficulty; usedScore++)
 		{
 			(Vector3 spawnPoint, bool success) = FindSpawnPosition();
 
 			if (!success) continue;
 
-			Enemy enemy = Me.EnemyScene.Instantiate<Enemy>();
+			List<Udils.WeightedRandom<PackedScene>.Element> enemies = new List<Udils.WeightedRandom<PackedScene>.Element>() {
+				new Udils.WeightedRandom<PackedScene>.Element {
+					Weight = 1f / 1f,
+					Value = Me.EnemyNormalScene
+				}
+			};
+
+			if (difficulty - usedScore >= 2f) enemies.Add(new Udils.WeightedRandom<PackedScene>.Element
+			{
+				Weight = 1f / 2f,
+				Value = Me.EnemyLargeScene
+			});
+
+			Udils.WeightedRandom<PackedScene>.Element choice = new Udils.WeightedRandom<PackedScene>(enemies).GetElement();
+
+			usedScore--;
+			usedScore += 1f / choice.Weight;
+
+			Enemy enemy = choice.Value.Instantiate<Enemy>();
 
 			Me.AddChild(enemy);
 
