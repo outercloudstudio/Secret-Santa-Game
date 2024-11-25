@@ -3,8 +3,9 @@ using System;
 
 public partial class Damageable : Node
 {
+    [Signal] public delegate void KilledEventHandler();
+
     [Export] public float Health = 100f;
-    [Export] public Node Target;
 
     public void Damage(float amount)
     {
@@ -12,6 +13,6 @@ public partial class Damageable : Node
 
         if (Health > 0) return;
 
-        GetParent().QueueFree();
+        EmitSignal(SignalName.Killed);
     }
 }

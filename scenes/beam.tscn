@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://uita6hnuthsk"]
 
-[ext_resource type="Script" path="res://Beam.cs" id="1_io3eb"]
+[ext_resource type="Script" path="res://scripts/Beam.cs" id="1_io3eb"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_2o2an"]
 

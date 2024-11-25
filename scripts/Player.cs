@@ -8,6 +8,7 @@ public partial class Player : CharacterBody3D
 	public static Player Me;
 
 	[Export] public Panel ScreenOverlay;
+	[Export] public Control DamageOverlay;
 	[Export] public Node3D SpawnPosition;
 	[Export] public PackedScene BeamScene;
 	[Export] public Node3D ShootPosition;
@@ -27,6 +28,7 @@ public partial class Player : CharacterBody3D
 	private Camera3D _camera;
 	private Node3D _handle;
 	private Node3D _grip;
+	private Damageable _damageable;
 	private bool _chargingJump = false;
 	private float _jumpCharge = 0f;
 	private float _onFloorTimer = 0f;
@@ -50,6 +52,7 @@ public partial class Player : CharacterBody3D
 		_camera = GetNode<Camera3D>("Camera3D");
 		_handle = _camera.GetNode<Node3D>("Handle");
 		_grip = _handle.GetNode<Node3D>("Grip");
+		_damageable = GetNode<Damageable>("Damageable");
 
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 
@@ -234,11 +237,7 @@ public partial class Player : CharacterBody3D
 
 		if (GlobalPosition.Y < -30f)
 		{
-			GlobalPosition = SpawnPosition.GlobalPosition + Vector3.Up * 60f;
-
-			_spawnFogActive = true;
-
-			_chargingJump = false;
+			Died();
 		}
 
 		_camera.Rotation = new Vector3(_camera.Rotation.X, _camera.Rotation.Y, MathHelper.FixedLerp(_camera.Rotation.Z, Mathf.DegToRad(_cameraWallTilt * 10f), 8f, (float)delta));
@@ -248,6 +247,19 @@ public partial class Player : CharacterBody3D
 
 		_handle.Position = MathHelper.FixedLerp(_handle.Position, Vector3.Zero, 16f, (float)delta);
 		_grip.Rotation = MathHelper.FixedLerp(_grip.Rotation, Vector3.Zero, 24f, (float)delta);
+
+		DamageOverlay.Modulate = new Color(DamageOverlay.Modulate.R, DamageOverlay.Modulate.B, DamageOverlay.Modulate.G, MathHelper.FixedLerp(DamageOverlay.Modulate.A, 1f - _damageable.Health / 100f, 8f, (float)delta));
+	}
+
+	public void Died()
+	{
+		GlobalPosition = SpawnPosition.GlobalPosition + Vector3.Up * 60f;
+
+		_spawnFogActive = true;
+
+		_chargingJump = false;
+
+		_damageable.Health = 100f;
 	}
 
 	private void HandleScreenshake(float delta)

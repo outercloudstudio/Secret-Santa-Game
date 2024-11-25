@@ -1,8 +1,8 @@
 [gd_scene load_steps=12 format=3 uid="uid://cnl4uwxmqxx0x"]
 
-[ext_resource type="Script" path="res://Player.cs" id="1_owejm"]
-[ext_resource type="Shader" path="res://outline.gdshader" id="2_w6117"]
-[ext_resource type="PackedScene" uid="uid://b6yyy810rxnm4" path="res://city_2.blend" id="3_76lql"]
+[ext_resource type="Script" path="res://scripts/Player.cs" id="1_owejm"]
+[ext_resource type="Shader" path="res://scripts/outline.gdshader" id="2_w6117"]
+[ext_resource type="PackedScene" uid="uid://b6yyy810rxnm4" path="res://models/city_2.blend" id="3_76lql"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_xv2p5"]
 

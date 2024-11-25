@@ -1,33 +1,8 @@
-[gd_scene load_steps=20 format=3 uid="uid://b0btl806nuqh6"]
+[gd_scene load_steps=9 format=3 uid="uid://b0btl806nuqh6"]
 
-[ext_resource type="Script" path="res://Player.cs" id="1_uqxd5"]
-[ext_resource type="Shader" path="res://outline.gdshader" id="2_otrtl"]
-[ext_resource type="PackedScene" uid="uid://uita6hnuthsk" path="res://beam.tscn" id="2_w06cf"]
-[ext_resource type="PackedScene" uid="uid://m8u64h7ecbtk" path="res://city_fight.blend" id="3_bi0rg"]
-[ext_resource type="PackedScene" uid="uid://b5kffvjjh2kib" path="res://models/blasters/blasterH.fbx" id="3_w0uh8"]
-[ext_resource type="PackedScene" uid="uid://81fl28yblv5d" path="res://liam.tscn" id="4_47yvl"]
-[ext_resource type="Texture2D" uid="uid://du0ircd5iil20" path="res://textures/crosshair.png" id="4_u6b1v"]
-[ext_resource type="Shader" path="res://invert.gdshader" id="4_wymne"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_xv2p5"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_f0tyy"]
-
-[sub_resource type="QuadMesh" id="QuadMesh_u0cuk"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_nnt3x"]
-render_priority = 0
-shader = ExtResource("2_otrtl")
-shader_parameter/normal_threshold = 0.1
-shader_parameter/depth_threshold = 0.05
-shader_parameter/depth_artifact_correction_coef = 2.0
-shader_parameter/outline_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_caumd"]
-bg_color = Color(1, 1, 1, 1)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_xggwe"]
-shader = ExtResource("4_wymne")
+[ext_resource type="PackedScene" uid="uid://mcahqrmwo46w" path="res://scenes/player.tscn" id="1_us7lh"]
+[ext_resource type="PackedScene" uid="uid://m8u64h7ecbtk" path="res://models/city_fight.blend" id="3_bi0rg"]
+[ext_resource type="PackedScene" uid="uid://81fl28yblv5d" path="res://scenes/enemy.tscn" id="3_e2vnu"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_325jp"]
 sky_top_color = Color(0.573511, 0.340421, 0.636771, 1)
@@ -69,74 +44,8 @@ agent_max_climb = 5.0
 [node name="SpawnPosition" type="Node3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 10.1887, 20.5442, 1.17776)
 
-[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("ScreenOverlay", "SpawnPosition", "ShootPosition")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 10.1887, 20.5442, 1.1942)
-axis_lock_angular_x = true
-axis_lock_angular_z = true
-floor_stop_on_slope = false
-floor_snap_length = 0.0
-platform_on_leave = 2
-script = ExtResource("1_uqxd5")
-ScreenOverlay = NodePath("CanvasLayer/ScreenOverlay")
+[node name="Player" parent="." node_paths=PackedStringArray("SpawnPosition") instance=ExtResource("1_us7lh")]
 SpawnPosition = NodePath("../SpawnPosition")
-BeamScene = ExtResource("2_w06cf")
-ShootPosition = NodePath("Camera3D/Handle/Grip/blasterH/ShootPosition")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
-mesh = SubResource("CapsuleMesh_xv2p5")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
-shape = SubResource("CapsuleShape3D_f0tyy")
-
-[node name="Camera3D" type="Camera3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.592913, 0)
-fov = 90.0
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Player/Camera3D"]
-transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, -0.1)
-mesh = SubResource("QuadMesh_u0cuk")
-surface_material_override/0 = SubResource("ShaderMaterial_nnt3x")
-
-[node name="Handle" type="Node3D" parent="Player/Camera3D"]
-
-[node name="Grip" type="Node3D" parent="Player/Camera3D/Handle"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32, -0.229269, -0.310672)
-
-[node name="blasterH" parent="Player/Camera3D/Handle/Grip" instance=ExtResource("3_w0uh8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.395, -5.96046e-08, 0.0302696, -0.0383282)
-
-[node name="ShootPosition" type="Node3D" parent="Player/Camera3D/Handle/Grip/blasterH"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.217234)
-
-[node name="CanvasLayer" type="CanvasLayer" parent="Player"]
-layer = 2
-
-[node name="ScreenOverlay" type="Panel" parent="Player/CanvasLayer"]
-modulate = Color(1, 1, 1, 0)
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_caumd")
-
-[node name="Crosshair" type="CanvasLayer" parent="Player"]
-
-[node name="TextureRect" type="TextureRect" parent="Player/Crosshair"]
-texture_filter = 1
-material = SubResource("ShaderMaterial_xggwe")
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -7.0
-offset_top = -7.0
-offset_right = 7.0
-offset_bottom = 7.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("4_u6b1v")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.501691, -0.153371, 0.851342, -0.463597, 0.783223, 0.414294, -0.730331, -0.602527, 0.321834, 0, 4.84192, 0)
@@ -145,21 +54,6 @@ shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_b2cjd")
-
-[node name="Enemy" parent="." instance=ExtResource("4_47yvl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8989, 19.3305, 9.58358)
-
-[node name="Enemy2" parent="." instance=ExtResource("4_47yvl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.1446, 19.3305, -1.39867)
-
-[node name="Enemy3" parent="." instance=ExtResource("4_47yvl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.26186, 19.3305, -16.1068)
-
-[node name="Enemy4" parent="." instance=ExtResource("4_47yvl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.7707, 19.3305, -7.70208)
-
-[node name="Enemy5" parent="." instance=ExtResource("4_47yvl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.8559, 19.3305, 9.25666)
 
 [node name="GroundNavigation" type="NavigationRegion3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20.2534, 0)
@@ -191,3 +85,6 @@ transform = Transform3D(9.40284, 0.366844, 3.02925, 0.0117542, 11.214, -6.34349,
 visible = false
 mesh = SubResource("BoxMesh_2n8h4")
 skeleton = NodePath("")
+
+[node name="Enemy" parent="." instance=ExtResource("3_e2vnu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70145, 19.1686, 1.00077)

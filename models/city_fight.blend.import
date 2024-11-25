@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b6yyy810rxnm4"
-path="res://.godot/imported/city_2.blend-381048be64bb732486422aa5a0f4b133.scn"
+uid="uid://m8u64h7ecbtk"
+path="res://.godot/imported/city_fight.blend-2181271db639cc9626ba32986629f49f.scn"
 
 [deps]
 
-source_file="res://city_2.blend"
-dest_files=["res://.godot/imported/city_2.blend-381048be64bb732486422aa5a0f4b133.scn"]
+source_file="res://models/city_fight.blend"
+dest_files=["res://.godot/imported/city_fight.blend-2181271db639cc9626ba32986629f49f.scn"]
 
 [params]
 
