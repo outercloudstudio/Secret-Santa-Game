@@ -67,6 +67,8 @@ public partial class Player : CharacterBody3D
 		if (IsOnFloor())
 		{
 			_onFloorTimer = 0.1f;
+
+			if (_lastVelocity.Y < -30f) Shake(-_lastVelocity.Y / 200f);
 		}
 
 		Vector2 movementInput = Input.GetVector("left", "right", "back", "foward");
@@ -140,6 +142,7 @@ public partial class Player : CharacterBody3D
 		}
 
 		Velocity = _dashVelocity + _movementVelocity + _jumpVelocity;
+		_lastVelocity = Velocity;
 
 		MoveAndSlide();
 
@@ -205,6 +208,8 @@ public partial class Player : CharacterBody3D
 			_handleAngularVelocity += new Vector3(25f, 0, 0);
 
 			beam.Target = hitPosition;
+
+			Shake(0.1f);
 		}
 	}
 
@@ -264,20 +269,30 @@ public partial class Player : CharacterBody3D
 		Game.Restart();
 	}
 
+	public void Hurt()
+	{
+		Shake(0.5f);
+	}
+
+	public void Shake(float amount)
+	{
+		_shakeIntensity = Mathf.Max(_shakeIntensity, amount);
+	}
+
 	private void HandleScreenshake(float delta)
 	{
 		_shakeTimer -= delta;
 
 		if (_shakeTimer <= 0)
 		{
-			_shakeTimer = _random.RandfRange(0.02f, 0.03f);
+			_shakeTimer = _random.RandfRange(0.04f, 0.06f);
 
 			_shakeDirection = _camera.Basis.X.Rotated(-_camera.Basis.Z.Normalized(), _random.RandfRange(0f, Mathf.Pi * 2f));
 		}
 
-		_shakePosition = _shakeDirection * Mathf.Pow(_shakeIntensity * 3f, 0.8f);
+		_shakePosition = _shakeDirection * Mathf.Pow(_shakeIntensity * 2f, 0.8f);
 
-		_shakeIntensity -= delta * 8f;
+		_shakeIntensity -= delta * 4f;
 		if (_shakeIntensity < 0f) _shakeIntensity = 0f;
 
 		_camera.Position = new Vector3(0f, 0.593f, 0f) + _shakePosition;

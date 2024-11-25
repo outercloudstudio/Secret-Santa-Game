@@ -43,6 +43,7 @@ BeamScene = ExtResource("2_ibevl")
 ShootPosition = NodePath("Camera3D/Handle/Grip/blasterH/ShootPosition")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("CapsuleMesh_xv2p5")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -113,4 +114,5 @@ texture = ExtResource("6_yji8y")
 [node name="Damageable" type="Node" parent="."]
 script = ExtResource("7_nupe7")
 
+[connection signal="Hurt" from="Damageable" to="." method="Hurt"]
 [connection signal="Killed" from="Damageable" to="." method="Died"]
