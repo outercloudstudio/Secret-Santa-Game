@@ -187,8 +187,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.01, 0)
 target_position = Vector3(0, -2, 0)
 
 [node name="WallRaycast" type="RayCast3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.414752, 0)
-target_position = Vector3(0, 0, -0.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.523885, 0)
+target_position = Vector3(0, 0, -0.7)
 
 [node name="Damageable" type="Node" parent="."]
 script = ExtResource("3_befjb")

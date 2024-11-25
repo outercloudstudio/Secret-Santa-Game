@@ -10,6 +10,8 @@ public partial class Game : Node3D
 	[Export] public NavigationRegion3D NavigationRegion;
 
 	private static bool s_Started = false;
+	private static float s_Difficulty = 5f;
+
 
 	public override void _Ready()
 	{
@@ -23,17 +25,27 @@ public partial class Game : Node3D
 			s_Started = true;
 
 			Start();
+
+			return;
 		}
+
+		if (GetTree().GetNodesInGroup("Enemies").Count > 0) return;
+
+
+		s_Difficulty += 3f;
+		StartRound(s_Difficulty);
 	}
 
 	public static void Start()
 	{
-		StartRound(5f);
+		s_Difficulty = 5f;
+
+		StartRound(s_Difficulty);
 	}
 
 	public static void End()
 	{
-		foreach (Node node in Me.GetTree().GetNodesInGroup("Enemeies"))
+		foreach (Node node in Me.GetTree().GetNodesInGroup("Enemies"))
 		{
 			node.QueueFree();
 		}

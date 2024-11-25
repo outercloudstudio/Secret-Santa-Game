@@ -48,7 +48,7 @@ public partial class Enemy : CharacterBody3D
 		movement = movement.Normalized();
 
 		_jumpRaycast.GlobalPosition = GlobalPosition + movement;
-		_wallRaycast.TargetPosition = movement * 0.6f;
+		_wallRaycast.TargetPosition = movement * 0.7f;
 
 		bool shouldJump = !_jumpRaycast.IsColliding() || _wallRaycast.IsColliding();
 

@@ -260,6 +260,8 @@ public partial class Player : CharacterBody3D
 		_chargingJump = false;
 
 		_damageable.Health = 100f;
+
+		Game.Restart();
 	}
 
 	private void HandleScreenshake(float delta)
