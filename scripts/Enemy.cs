@@ -51,7 +51,7 @@ public partial class Enemy : CharacterBody3D
 		{
 			_nextPathPosition = _navigationAgent.GetNextPathPosition();
 
-			_timerTillPathRecalculation = GD.Randf() * 2f + 0.2f;
+			_timerTillPathRecalculation = GD.Randf() * 0.2f + 0.1f;
 		}
 
 		if (IsOnFloor())

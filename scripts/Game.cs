@@ -35,14 +35,13 @@ public partial class Game : Node3D
 		if (GetTree().GetNodesInGroup("Enemies").Count > 0) return;
 
 
-		s_Difficulty += 3f;
+		s_Difficulty += 5f;
 		StartRound(s_Difficulty);
 	}
 
 	public static void Start()
 	{
-		// s_Difficulty = 5f;
-		s_Difficulty = 30f;
+		s_Difficulty = 5f;
 
 		StartRound(s_Difficulty);
 	}
