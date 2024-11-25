@@ -18,12 +18,31 @@ public partial class Enemy : CharacterBody3D
 	private RayCast3D _wallRaycast;
 	private Area3D _damageArea;
 
+	private Udils.ProgressableAction _attack;
+
 	public override void _Ready()
 	{
 		_navigationAgent = GetNode<NavigationAgent3D>("NavigationAgent3D");
 		_jumpRaycast = GetNode<RayCast3D>("JumpRaycast");
 		_wallRaycast = GetNode<RayCast3D>("WallRaycast");
 		_damageArea = GetNode<Area3D>("DamageArea");
+
+		_attack = new Udils.ProgressableAction()
+		.Add(0f, () =>
+		{
+			_attackCooldown = 1f;
+
+			AnimationTree.Set("parameters/Attack/request", (int)AnimationNodeOneShot.OneShotRequest.Fire);
+		})
+		.Add(0.3667f, () =>
+		{
+			foreach (Node3D body in _damageArea.GetOverlappingBodies())
+			{
+				if (!(body is Player player)) continue;
+
+				player.GetNode<Damageable>("Damageable").Damage(20f);
+			}
+		});
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -72,14 +91,17 @@ public partial class Enemy : CharacterBody3D
 
 	public override void _Process(double delta)
 	{
+		_attack.Update((float)delta);
+
+		if (_attack.IsInProgress()) return;
+
 		_attackCooldown -= (float)delta;
-		_attackTimer -= (float)delta;
 
 		if (_attackCooldown > 0) return;
 
 		if (GlobalPosition.DistanceTo(Player.Me.GlobalPosition) > 3f) return;
 
-		Attack();
+		_attack.Start();
 	}
 
 	public void Died()
@@ -96,20 +118,5 @@ public partial class Enemy : CharacterBody3D
 		GlobalRotation = MathHelper.FixedLerp(oldRotation, GlobalRotation, 8f, delta);
 
 		AnimationTree.Set("parameters/JumpBlend/blend_amount", MathHelper.FixedLerp((float)AnimationTree.Get("parameters/JumpBlend/blend_amount"), IsOnFloor() ? 0 : 1, 2f, delta));
-	}
-
-	private void Attack()
-	{
-		_attackCooldown = 2f;
-		_attackTimer = 1f;
-
-		AnimationTree.Set("parameters/Attack/request", (int)AnimationNodeOneShot.OneShotRequest.Fire);
-
-		foreach (Node3D body in _damageArea.GetOverlappingBodies())
-		{
-			if (!(body is Player player)) continue;
-
-			player.GetNode<Damageable>("Damageable").Damage(20f);
-		}
 	}
 }
