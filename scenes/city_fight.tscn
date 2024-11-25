@@ -1,5 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://b0btl806nuqh6"]
+[gd_scene load_steps=10 format=3 uid="uid://b0btl806nuqh6"]
 
+[ext_resource type="Script" path="res://scripts/Game.cs" id="1_6ctq6"]
 [ext_resource type="PackedScene" uid="uid://mcahqrmwo46w" path="res://scenes/player.tscn" id="1_us7lh"]
 [ext_resource type="PackedScene" uid="uid://m8u64h7ecbtk" path="res://models/city_fight.blend" id="3_bi0rg"]
 [ext_resource type="PackedScene" uid="uid://81fl28yblv5d" path="res://scenes/enemy.tscn" id="3_e2vnu"]
@@ -39,7 +40,11 @@ agent_max_climb = 5.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_2n8h4"]
 
-[node name="Prototype" type="Node3D"]
+[node name="Prototype" type="Node3D" node_paths=PackedStringArray("SpawnPoint", "NavigationRegion")]
+script = ExtResource("1_6ctq6")
+EnemyScene = ExtResource("3_e2vnu")
+SpawnPoint = NodePath("SpawnPosition")
+NavigationRegion = NodePath("GroundNavigation")
 
 [node name="SpawnPosition" type="Node3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 10.1887, 20.5442, 1.17776)
@@ -85,6 +90,3 @@ transform = Transform3D(9.40284, 0.366844, 3.02925, 0.0117542, 11.214, -6.34349,
 visible = false
 mesh = SubResource("BoxMesh_2n8h4")
 skeleton = NodePath("")
-
-[node name="Enemy" parent="." instance=ExtResource("3_e2vnu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.70145, 19.1686, 1.00077)

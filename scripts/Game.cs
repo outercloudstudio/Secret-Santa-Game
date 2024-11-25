@@ -1,33 +1,88 @@
+using Godot;
 using System;
-using System.Collections.Generic;
 
-public class Game
+public partial class Game : Node3D
 {
-    public static List<Action> VoicelineTriggerQueue = new List<Action>();
+	public static Game Me;
 
-    private static bool s_VoicelineInProgress = false;
+	[Export] public PackedScene EnemyScene;
+	[Export] public Node3D SpawnPoint;
+	[Export] public NavigationRegion3D NavigationRegion;
 
-    public static void QueueVoiceLine(Action trigger)
-    {
-        VoicelineTriggerQueue.Add(trigger);
+	private static bool s_Started = false;
 
-        if (s_VoicelineInProgress) return;
+	public override void _Ready()
+	{
+		Me = this;
+	}
 
-        s_VoicelineInProgress = true;
+	public override void _Process(double delta)
+	{
+		if (!s_Started)
+		{
+			s_Started = true;
 
-        VoicelineTriggerQueue[0].Invoke();
-        VoicelineTriggerQueue.RemoveAt(0);
-    }
+			Start();
+		}
+	}
 
-    public static void VoicelineFinished()
-    {
-        s_VoicelineInProgress = false;
+	public static void Start()
+	{
+		StartRound(5f);
+	}
 
-        if (VoicelineTriggerQueue.Count == 0) return;
+	public static void End()
+	{
+		foreach (Node node in Me.GetTree().GetNodesInGroup("Enemeies"))
+		{
+			node.QueueFree();
+		}
+	}
 
-        s_VoicelineInProgress = true;
+	public static void Restart()
+	{
+		End();
+		Start();
+	}
 
-        VoicelineTriggerQueue[0].Invoke();
-        VoicelineTriggerQueue.RemoveAt(0);
-    }
+	public static void StartRound(float difficulty)
+	{
+		Me.NavigationRegion.BakeNavigationMesh(false);
+
+		for (int i = 0; i < difficulty; i++)
+		{
+			(Vector3 spawnPoint, bool success) = FindSpawnPosition();
+
+			if (!success) continue;
+
+			Enemy enemy = Me.EnemyScene.Instantiate<Enemy>();
+
+			Me.AddChild(enemy);
+
+			enemy.GlobalPosition = spawnPoint;
+		}
+	}
+
+	public static (Vector3, bool) FindSpawnPosition()
+	{
+		for (int attempt = 0; attempt < 3; attempt++)
+		{
+			Vector3 spawnPosition = NavigationServer3D.Singleton.RegionGetRandomPoint(Me.NavigationRegion.GetRid(), Me.NavigationRegion.NavigationLayers, true);
+
+			Vector3[] path = NavigationServer3D.Singleton.MapGetPath(Me.NavigationRegion.GetNavigationMap(), spawnPosition, Me.SpawnPoint.GlobalPosition, false);
+
+			if (path[path.Length - 1].DistanceTo(Me.SpawnPoint.GlobalPosition) > 1.5f) continue;
+
+			PhysicsDirectSpaceState3D spaceState = Me.GetWorld3D().DirectSpaceState;
+			PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(spawnPosition, spawnPosition + Vector3.Down * 5f);
+			query.CollideWithAreas = true;
+			Godot.Collections.Dictionary result = spaceState.IntersectRay(query);
+
+			if (result.Count == 0) continue;
+
+			return (spawnPosition, true);
+		}
+
+		return (Vector3.Zero, false);
+	}
 }

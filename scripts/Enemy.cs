@@ -90,7 +90,8 @@ public partial class Enemy : CharacterBody3D
 	private void UpdateAnimations(float delta)
 	{
 		Vector3 oldRotation = GlobalRotation;
-		LookAt(GlobalPosition + _movement);
+
+		if (_movement != Vector3.Zero) LookAt(GlobalPosition + _movement);
 
 		GlobalRotation = MathHelper.FixedLerp(oldRotation, GlobalRotation, 8f, delta);
 

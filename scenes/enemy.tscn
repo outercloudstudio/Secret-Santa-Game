@@ -205,7 +205,7 @@ visible = false
 mesh = SubResource("CapsuleMesh_gujyd")
 surface_material_override/0 = ExtResource("5_wif3l")
 
-[node name="DamageArea" type="Area3D" parent="."]
+[node name="DamageArea" type="Area3D" parent="." groups=["Enemies"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.07081)
 collision_layer = 2
 
