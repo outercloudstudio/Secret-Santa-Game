@@ -8,6 +8,7 @@ public partial class Game : Node3D
 
 	[Export] public PackedScene EnemyNormalScene;
 	[Export] public PackedScene EnemyLargeScene;
+	[Export] public PackedScene EnemyRangedScene;
 	[Export] public Node3D SpawnPoint;
 	[Export] public NavigationRegion3D NavigationRegion;
 
@@ -76,11 +77,20 @@ public partial class Game : Node3D
 				}
 			};
 
-			if (difficulty - usedScore >= 2f) enemies.Add(new Udils.WeightedRandom<PackedScene>.Element
+			if (difficulty - usedScore >= 2f)
 			{
-				Weight = 1f / 2f,
-				Value = Me.EnemyLargeScene
-			});
+				enemies.Add(new Udils.WeightedRandom<PackedScene>.Element
+				{
+					Weight = 1f / 2f,
+					Value = Me.EnemyLargeScene
+				});
+
+				enemies.Add(new Udils.WeightedRandom<PackedScene>.Element
+				{
+					Weight = 1f / 2f,
+					Value = Me.EnemyRangedScene
+				});
+			}
 
 			Udils.WeightedRandom<PackedScene>.Element choice = new Udils.WeightedRandom<PackedScene>(enemies).GetElement();
 

@@ -5,12 +5,15 @@ public partial class Enemy : CharacterBody3D
 {
 	[Export] public float Speed = 20f;
 	[Export] public float WallRaycastLength = 0.7f;
+	[Export] public float TargetPlayerDistance = 0f;
+	[Export] public float TargetPlayerDistanceBuffer = 0f;
 	[Export] public AnimationTree AnimationTree;
 
 	public float _baseJumpLift = 30f;
 
 	private Vector3 _jumpVelocity;
 	private Vector3 _movement;
+	private bool _inRange;
 
 
 	private NavigationAgent3D _navigationAgent;
@@ -24,7 +27,7 @@ public partial class Enemy : CharacterBody3D
 		_navigationAgent = GetNode<NavigationAgent3D>("NavigationAgent3D");
 		_jumpRaycast = GetNode<RayCast3D>("JumpRaycast");
 		_wallRaycast = GetNode<RayCast3D>("WallRaycast");
-		_damageArea = GetNode<Area3D>("DamageArea");
+		_damageArea = GetNodeOrNull<Area3D>("DamageArea");
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -32,6 +35,15 @@ public partial class Enemy : CharacterBody3D
 		_navigationAgent.TargetPosition = Player.Me.GlobalPosition;
 
 		if (_navigationAgent.IsNavigationFinished()) return;
+
+		if (!_inRange)
+		{
+			_inRange = Player.Me.GlobalPosition.DistanceTo(GlobalPosition) <= TargetPlayerDistance;
+		}
+		else
+		{
+			_inRange = Player.Me.GlobalPosition.DistanceTo(GlobalPosition) <= TargetPlayerDistance + TargetPlayerDistanceBuffer;
+		}
 
 		Vector3 nextPathPosition = _navigationAgent.GetNextPathPosition();
 
@@ -60,7 +72,7 @@ public partial class Enemy : CharacterBody3D
 
 		if (IsOnFloor()) _movement = movement;
 
-		Velocity = _movement * Speed + _jumpVelocity;
+		Velocity = (_inRange ? Vector3.Zero : _movement * Speed) + _jumpVelocity;
 
 		MoveAndSlide();
 
@@ -68,7 +80,7 @@ public partial class Enemy : CharacterBody3D
 
 		UpdateAnimations((float)delta);
 
-		_damageArea.GlobalPosition = GlobalPosition + movement;
+		if (_damageArea != null) _damageArea.GlobalPosition = GlobalPosition + movement;
 	}
 
 	public void Died()
@@ -85,5 +97,6 @@ public partial class Enemy : CharacterBody3D
 		GlobalRotation = MathHelper.FixedLerp(oldRotation, GlobalRotation, 8f, delta);
 
 		AnimationTree.Set("parameters/JumpBlend/blend_amount", MathHelper.FixedLerp((float)AnimationTree.Get("parameters/JumpBlend/blend_amount"), IsOnFloor() ? 0 : 1, 2f, delta));
+		AnimationTree.Set("parameters/MoveBlend/blend_amount", MathHelper.FixedLerp((float)AnimationTree.Get("parameters/MoveBlend/blend_amount"), Velocity.Length() > 0.1f ? 1f : 0f, 8f, delta));
 	}
 }
