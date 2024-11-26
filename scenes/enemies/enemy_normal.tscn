@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://81fl28yblv5d"]
+[gd_scene load_steps=38 format=3 uid="uid://81fl28yblv5d"]
 
 [ext_resource type="Script" path="res://scripts/Enemy.cs" id="1_j8jsr"]
 [ext_resource type="PackedScene" uid="uid://bvplknhww2gx7" path="res://models/Liam.blend" id="1_wd58v"]
@@ -6,6 +6,16 @@
 [ext_resource type="Script" path="res://scripts/DynamicHitbox.cs" id="4_hylmx"]
 [ext_resource type="Material" uid="uid://c8vgpij3ryu5j" path="res://material_debug.tres" id="5_wif3l"]
 [ext_resource type="Script" path="res://scripts/MeleeAttack.cs" id="6_vj6cu"]
+[ext_resource type="AudioStream" uid="uid://b2p2spa0k1bde" path="res://audio/gassy-footstep1.wav" id="7_wxbij"]
+[ext_resource type="AudioStream" uid="uid://dtaf1fakaggdl" path="res://audio/grassy-footstep2.wav" id="8_2nx2x"]
+[ext_resource type="AudioStream" uid="uid://d04voxaoqekwb" path="res://audio/grassy-footstep3.wav" id="9_28le2"]
+[ext_resource type="AudioStream" uid="uid://dojvl3e06eijj" path="res://audio/grassy-footstep4.wav" id="10_nvvvn"]
+[ext_resource type="AudioStream" uid="uid://bekaylxo5dwmq" path="res://audio/me_hurt_1.wav" id="11_jhfmq"]
+[ext_resource type="AudioStream" uid="uid://dnop6cf474fx2" path="res://audio/me_punch.wav" id="11_kxcxd"]
+[ext_resource type="AudioStream" uid="uid://2xv2vxr2gfom" path="res://audio/me_hurt_2.wav" id="12_ae0c1"]
+[ext_resource type="AudioStream" uid="uid://b0wpfudktkgao" path="res://audio/me_falling.wav" id="12_xqf3n"]
+[ext_resource type="AudioStream" uid="uid://blkvk3qkqsou5" path="res://audio/me_hurt_3.wav" id="13_s2euq"]
+[ext_resource type="AudioStream" uid="uid://6fcerfcyydkt" path="res://audio/me_breathing.wav" id="16_sd5me"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_xakuc"]
 animation = &"RunFast"
@@ -98,6 +108,23 @@ size = Vector3(1, 2.23767, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_f6j3p"]
 size = Vector3(1, 2.238, 1)
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_w5857"]
+random_pitch = 1.1
+random_volume_offset_db = 1.0
+streams_count = 4
+stream_0/stream = ExtResource("7_wxbij")
+stream_1/stream = ExtResource("8_2nx2x")
+stream_2/stream = ExtResource("9_28le2")
+stream_3/stream = ExtResource("10_nvvvn")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_84si4"]
+random_pitch = 1.1
+random_volume_offset_db = 1.0
+streams_count = 3
+stream_0/stream = ExtResource("11_jhfmq")
+stream_1/stream = ExtResource("12_ae0c1")
+stream_2/stream = ExtResource("13_s2euq")
 
 [node name="Enemy" type="CharacterBody3D" node_paths=PackedStringArray("AnimationTree") groups=["Enemies"]]
 script = ExtResource("1_j8jsr")
@@ -223,6 +250,26 @@ surface_material_override/0 = ExtResource("5_wif3l")
 script = ExtResource("6_vj6cu")
 AnimationTree = NodePath("../AnimationTree")
 
+[node name="Footsteps" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamRandomizer_w5857")
+volume_db = 20.0
+max_polyphony = 10
+
+[node name="Hurt" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamRandomizer_84si4")
+
+[node name="Attack" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("11_kxcxd")
+
+[node name="Fall" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("12_xqf3n")
+
+[node name="Breath" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("16_sd5me")
+volume_db = -5.0
+autoplay = true
+
+[connection signal="Hurt" from="Damageable" to="." method="Hurt"]
 [connection signal="Killed" from="Damageable" to="." method="Died"]
 
 [editable path="Liam2"]

@@ -17,13 +17,17 @@ public partial class RangedAttack : Node3D
 	private float _attackTimer;
 
 	private Area3D _damageArea;
+	public AudioStreamPlayer3D _attackSound;
 
 	public override void _Ready()
 	{
+		_attackSound = GetParent().GetNodeOrNull<AudioStreamPlayer3D>("Attack");
+
 		_attack = new Udils.ProgressableAction()
 		.Add(0f, () =>
 		{
 			_attackCooldown = Cooldown;
+			_attackSound.Play();
 
 			AnimationTree.Set("parameters/Attack/request", (int)AnimationNodeOneShot.OneShotRequest.Fire);
 		})

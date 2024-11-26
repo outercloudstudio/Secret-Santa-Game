@@ -10,17 +10,20 @@ public partial class Enemy : CharacterBody3D
 	[Export] public AnimationTree AnimationTree;
 
 	public float _baseJumpLift = 30f;
-
 	private Vector3 _jumpVelocity;
 	private Vector3 _movement;
 	private bool _inRange;
 	private float _timerTillPathRecalculation;
 	private Vector3 _nextPathPosition;
+	private float _timeTillFootsteps;
 
 	private NavigationAgent3D _navigationAgent;
 	private RayCast3D _jumpRaycast;
 	private RayCast3D _wallRaycast;
 	private Area3D _damageArea;
+	public AudioStreamPlayer3D _footsteps;
+	public AudioStreamPlayer3D _hurt;
+	public AudioStreamPlayer3D _fall;
 
 	public override void _Ready()
 	{
@@ -28,6 +31,9 @@ public partial class Enemy : CharacterBody3D
 		_jumpRaycast = GetNode<RayCast3D>("JumpRaycast");
 		_wallRaycast = GetNode<RayCast3D>("WallRaycast");
 		_damageArea = GetNodeOrNull<Area3D>("DamageArea");
+		_footsteps = GetNodeOrNull<AudioStreamPlayer3D>("Footsteps");
+		_hurt = GetNodeOrNull<AudioStreamPlayer3D>("Hurt");
+		_fall = GetNodeOrNull<AudioStreamPlayer3D>("Fall");
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -83,11 +89,30 @@ public partial class Enemy : CharacterBody3D
 
 		MoveAndSlide();
 
-		if (GlobalPosition.Y < -30f) Died();
+		if (GlobalPosition.Y < 16.122 && Velocity.Y < -40 && !_fall.Playing) _fall.Play();
+
+		if (GlobalPosition.Y < -80f) Died();
 
 		UpdateAnimations((float)delta);
 
 		if (_damageArea != null) _damageArea.GlobalPosition = GlobalPosition + movement;
+	}
+
+	public override void _Process(double delta)
+	{
+		_timeTillFootsteps -= (float)delta;
+
+		if (_movement.Length() > 0.1f && _timeTillFootsteps <= 0f)
+		{
+			// _footsteps.Play();
+
+			_timeTillFootsteps = 0.1f;
+		}
+	}
+
+	public void Hurt()
+	{
+		_hurt.Play();
 	}
 
 	public void Died()

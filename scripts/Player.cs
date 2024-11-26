@@ -12,6 +12,7 @@ public partial class Player : CharacterBody3D
 	[Export] public Node3D SpawnPosition;
 	[Export] public PackedScene BeamScene;
 	[Export] public Node3D ShootPosition;
+	[Export] public AudioStreamPlayer3D Laser;
 
 	public float Speed = 10.0f;
 	public float MaxSpeed = 30.0f;
@@ -192,6 +193,8 @@ public partial class Player : CharacterBody3D
 
 			beam.Source = ShootPosition;
 			beam.Target = _camera.GlobalPosition + -_camera.GlobalBasis.Z * 200f;
+
+			Laser.Play();
 
 			if (result.Count == 0) return;
 

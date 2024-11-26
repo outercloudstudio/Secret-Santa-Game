@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://xkdxap77s74t"
+path="res://.godot/imported/09 HoliznaCC0 - Retro Synths.mp3-3c579c39ffcb4868e3654390a98a0e01.mp3str"
+
+[deps]
+
+source_file="res://audio/09 HoliznaCC0 - Retro Synths.mp3"
+dest_files=["res://.godot/imported/09 HoliznaCC0 - Retro Synths.mp3-3c579c39ffcb4868e3654390a98a0e01.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4

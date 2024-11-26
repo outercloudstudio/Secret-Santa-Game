@@ -14,15 +14,18 @@ public partial class MeleeAttack : Node3D
     private float _attackTimer;
 
     private Area3D _damageArea;
+    public AudioStreamPlayer3D _attackSound;
 
     public override void _Ready()
     {
         _damageArea = GetParent().GetNode<Area3D>("DamageArea");
+        _attackSound = GetParent().GetNodeOrNull<AudioStreamPlayer3D>("Attack");
 
         _attack = new Udils.ProgressableAction()
         .Add(0f, () =>
         {
             _attackCooldown = 1f;
+            _attackSound.Play();
 
             AnimationTree.Set("parameters/Attack/request", (int)AnimationNodeOneShot.OneShotRequest.Fire);
         })
