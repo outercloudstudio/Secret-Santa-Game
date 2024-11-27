@@ -136,7 +136,7 @@ AnimationTree = NodePath("AnimationTree")
 transform = Transform3D(-6.08415, 0, 5.31894e-07, 0, 6.08415, 0, -5.31894e-07, 0, -6.08415, 0, 0, 0)
 
 [node name="Liam" parent="Liam2" index="0"]
-transform = Transform3D(0.988578, 0.138872, -0.0585392, -0.130912, 0.98374, 0.12295, 0.0746618, -0.113882, 0.990685, -0.134407, -0.107479, 0.14773)
+transform = Transform3D(0.988578, 0.138872, -0.0585392, -0.130912, 0.98374, 0.12295, 0.0746617, -0.113882, 0.990685, -0.134407, -0.107479, 0.14773)
 
 [node name="Skeleton3D" parent="Liam2/Liam" index="0"]
 bones/0/scale = Vector3(1, 1, 1)

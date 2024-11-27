@@ -128,6 +128,7 @@ stream_2/stream = ExtResource("13_s2euq")
 
 [node name="Enemy" type="CharacterBody3D" node_paths=PackedStringArray("AnimationTree") groups=["Enemies"]]
 script = ExtResource("1_j8jsr")
+WallRaycastLength = 0.8
 AnimationTree = NodePath("AnimationTree")
 
 [node name="Liam2" parent="." instance=ExtResource("1_wd58v")]
