@@ -15,6 +15,7 @@ public partial class Game : Node3D
     [Export] public NavigationRegion3D NavigationRegion;
     [Export] public Label ScoreLabel;
     [Export] public Label BestLabel;
+    [Export] public AnimationPlayer MenuAnimationPlayer;
 
     public static int Score = 0;
     public static int Highscore = 0;
@@ -22,15 +23,11 @@ public partial class Game : Node3D
     private static bool s_Started = false;
     private static float s_Difficulty = 5f;
 
-    private Node _menu;
 
 
     public override void _Ready()
     {
         Me = this;
-
-        _menu = MenuScene.Instantiate();
-        AddChild(_menu);
 
         NavigationRegion.BakeNavigationMesh(false);
     }
@@ -72,7 +69,7 @@ public partial class Game : Node3D
         s_Difficulty = 5f;
         Score = 0;
 
-        Me._menu.QueueFree();
+        Me.MenuAnimationPlayer.Play("out");
 
         StartRound(s_Difficulty);
 
@@ -92,8 +89,7 @@ public partial class Game : Node3D
 
         if (Score > Highscore) Highscore = Score;
 
-        Me._menu = Me.MenuScene.Instantiate();
-        Me.AddChild(Me._menu);
+        Me.MenuAnimationPlayer.PlayBackwards("out");
     }
 
     public static void Restart()

@@ -16,7 +16,7 @@ public partial class ScoreUI : CanvasLayer
     {
         _animatedScore = MathHelper.FixedLerp(_animatedScore, Game.InProgress ? Game.Score : Game.Highscore, 8f, (float)delta);
 
-        if (Mathf.Abs(_animatedScore - Game.Score) < 0.5f) _animatedScore = Game.Score;
+        if (Mathf.Abs(_animatedScore - (Game.InProgress ? Game.Score : Game.Highscore)) < 0.5f) _animatedScore = Game.Score;
 
         Game.Me.ScoreLabel.Text = MathF.Floor(_animatedScore).ToString();
     }

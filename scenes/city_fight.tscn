@@ -54,7 +54,7 @@ shader = ExtResource("8_3id2m")
 font = ExtResource("8_adqbk")
 font_size = 18
 
-[node name="Prototype" type="Node3D" node_paths=PackedStringArray("SpawnPoint", "NavigationRegion", "ScoreLabel", "BestLabel")]
+[node name="Prototype" type="Node3D" node_paths=PackedStringArray("SpawnPoint", "NavigationRegion", "ScoreLabel", "BestLabel", "MenuAnimationPlayer")]
 script = ExtResource("1_6ctq6")
 EnemyNormalScene = ExtResource("3_e2vnu")
 EnemyLargeScene = ExtResource("3_jbo8c")
@@ -64,6 +64,7 @@ SpawnPoint = NodePath("SpawnPosition")
 NavigationRegion = NodePath("GroundNavigation")
 ScoreLabel = NodePath("CanvasLayer/Score")
 BestLabel = NodePath("CanvasLayer/Best")
+MenuAnimationPlayer = NodePath("Menu/AnimationPlayer")
 
 [node name="SpawnPosition" type="Node3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 10.1887, 20.5442, 1.17776)
@@ -149,5 +150,7 @@ offset_bottom = -22.0
 grow_vertical = 0
 text = "Best:"
 label_settings = SubResource("LabelSettings_e8h1h")
+
+[node name="Menu" parent="." instance=ExtResource("5_qfrya")]
 
 [editable path="GroundNavigation/city_fight"]
