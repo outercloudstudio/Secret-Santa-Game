@@ -222,6 +222,16 @@ public partial class Player : CharacterBody3D
 
             Shake(0.1f);
         }
+
+        if (@event.IsActionPressed("increase_sensitivity"))
+        {
+            _cameraSensitivity += 0.0005f;
+        }
+
+        if (@event.IsActionPressed("decrease_sensitivity"))
+        {
+            _cameraSensitivity -= 0.0005f;
+        }
     }
 
     public override void _Process(double delta)

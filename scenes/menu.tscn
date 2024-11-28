@@ -3,60 +3,27 @@
 [ext_resource type="Shader" path="res://scripts/invert.gdshader" id="1_tk015"]
 [ext_resource type="FontFile" uid="uid://t5bgugut4c71" path="res://Inter_18pt-SemiBold.ttf" id="2_w3f15"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_0s62v"]
-shader = ExtResource("1_tk015")
-
-[sub_resource type="LabelSettings" id="LabelSettings_yt3r2"]
-font = ExtResource("2_w3f15")
-font_size = 54
-
-[sub_resource type="LabelSettings" id="LabelSettings_q4rsb"]
-font = ExtResource("2_w3f15")
-font_size = 18
-
 [sub_resource type="Animation" id="Animation_38786"]
 resource_name = "out"
 length = 0.5
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Title:position:x")
+tracks/0/path = NodePath("Control/Title:position:y")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(458, -0.25, 0, 0.25, 0, 458, -0.25, 0, 0.25, 0),
+"points": PackedFloat32Array(93, -0.25, 0, 0, -47.5, -146, -0.433333, -0.5, 0.25, 0),
 "times": PackedFloat32Array(0, 0.5)
 }
 tracks/1/type = "bezier"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Title:position:y")
+tracks/1/path = NodePath("Control/Label:position:y")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(93, -0.25, 0, 0, -47.5, -146, -0.433333, -0.5, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Label:position:x")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(513, -0.25, 0, 0.25, 0, 513, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0, 0.5)
-}
-tracks/3/type = "bezier"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Label:position:y")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
 "handle_modes": PackedInt32Array(0, 0),
 "points": PackedFloat32Array(164, -0.25, 0, 0, -42.5, -75, -0.4, 2.5, 0.25, 0),
 "times": PackedFloat32Array(0, 0.5)
@@ -67,43 +34,21 @@ length = 0.001
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Title:position:x")
+tracks/0/path = NodePath("Control/Title:position:y")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(458, -0.25, 0, 0.25, 0),
+"points": PackedFloat32Array(93, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0)
 }
 tracks/1/type = "bezier"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("Title:position:y")
+tracks/1/path = NodePath("Control/Label:position:y")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(93, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/2/type = "bezier"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Label:position:x")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"handle_modes": PackedInt32Array(0),
-"points": PackedFloat32Array(513, -0.25, 0, 0.25, 0),
-"times": PackedFloat32Array(0)
-}
-tracks/3/type = "bezier"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Label:position:y")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
 "handle_modes": PackedInt32Array(0),
 "points": PackedFloat32Array(164, -0.25, 0, 0.25, 0),
 "times": PackedFloat32Array(0)
@@ -115,10 +60,35 @@ _data = {
 "out": SubResource("Animation_38786")
 }
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0s62v"]
+shader = ExtResource("1_tk015")
+
+[sub_resource type="LabelSettings" id="LabelSettings_yt3r2"]
+font = ExtResource("2_w3f15")
+font_size = 54
+
+[sub_resource type="LabelSettings" id="LabelSettings_q4rsb"]
+font = ExtResource("2_w3f15")
+font_size = 18
+
 [node name="Menu" type="CanvasLayer"]
 
-[node name="Title" type="Label" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ww5f5")
+}
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Title" type="Label" parent="Control"]
 material = SubResource("ShaderMaterial_0s62v")
+layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -131,8 +101,9 @@ text = "Polydash"
 label_settings = SubResource("LabelSettings_yt3r2")
 horizontal_alignment = 1
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="Control"]
 material = SubResource("ShaderMaterial_0s62v")
+layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -143,8 +114,3 @@ offset_bottom = 187.0
 grow_horizontal = 2
 text = "SPACE to Start"
 label_settings = SubResource("LabelSettings_q4rsb")
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_ww5f5")
-}

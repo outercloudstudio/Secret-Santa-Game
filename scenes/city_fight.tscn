@@ -62,8 +62,8 @@ EnemyRangedScene = ExtResource("4_ykdew")
 MenuScene = ExtResource("5_qfrya")
 SpawnPoint = NodePath("SpawnPosition")
 NavigationRegion = NodePath("GroundNavigation")
-ScoreLabel = NodePath("CanvasLayer/Score")
-BestLabel = NodePath("CanvasLayer/Best")
+ScoreLabel = NodePath("CanvasLayer/Control/Score")
+BestLabel = NodePath("CanvasLayer/Control/Best")
 MenuAnimationPlayer = NodePath("Menu/AnimationPlayer")
 
 [node name="SpawnPosition" type="Node3D" parent="."]
@@ -125,8 +125,19 @@ autoplay = true
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 script = ExtResource("9_dt24j")
 
-[node name="Score" type="Label" parent="CanvasLayer"]
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Score" type="Label" parent="CanvasLayer/Control"]
 material = SubResource("ShaderMaterial_x3a4x")
+layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -138,8 +149,9 @@ grow_vertical = 0
 text = "1238"
 label_settings = SubResource("LabelSettings_e8h1h")
 
-[node name="Best" type="Label" parent="CanvasLayer"]
+[node name="Best" type="Label" parent="CanvasLayer/Control"]
 material = SubResource("ShaderMaterial_x3a4x")
+layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -150,6 +162,7 @@ offset_bottom = -22.0
 grow_vertical = 0
 text = "Best:"
 label_settings = SubResource("LabelSettings_e8h1h")
+metadata/_edit_use_anchors_ = true
 
 [node name="Menu" parent="." instance=ExtResource("5_qfrya")]
 

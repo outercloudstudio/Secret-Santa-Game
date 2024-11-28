@@ -133,3 +133,5 @@ script = ExtResource("7_nupe7")
 
 [connection signal="Hurt" from="Damageable" to="." method="Hurt"]
 [connection signal="Killed" from="Damageable" to="." method="Died"]
+
+[editable path="Camera3D/Handle/Grip/blasterH"]
