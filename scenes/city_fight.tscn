@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://b0btl806nuqh6"]
+[gd_scene load_steps=19 format=3 uid="uid://b0btl806nuqh6"]
 
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_6ctq6"]
 [ext_resource type="PackedScene" uid="uid://mcahqrmwo46w" path="res://scenes/player.tscn" id="1_us7lh"]
@@ -10,6 +10,7 @@
 [ext_resource type="AudioStream" uid="uid://xkdxap77s74t" path="res://audio/09 HoliznaCC0 - Retro Synths.mp3" id="7_htf2d"]
 [ext_resource type="Shader" path="res://scripts/invert.gdshader" id="8_3id2m"]
 [ext_resource type="FontFile" uid="uid://t5bgugut4c71" path="res://Inter_18pt-SemiBold.ttf" id="8_adqbk"]
+[ext_resource type="Script" path="res://scripts/ScoreUI.cs" id="9_dt24j"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_325jp"]
 sky_top_color = Color(0.573511, 0.340421, 0.636771, 1)
@@ -121,6 +122,7 @@ volume_db = -10.0
 autoplay = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+script = ExtResource("9_dt24j")
 
 [node name="Score" type="Label" parent="CanvasLayer"]
 material = SubResource("ShaderMaterial_x3a4x")

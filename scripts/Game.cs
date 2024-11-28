@@ -16,10 +16,11 @@ public partial class Game : Node3D
     [Export] public Label ScoreLabel;
     [Export] public Label BestLabel;
 
+    public static int Score = 0;
+    public static int Highscore = 0;
+
     private static bool s_Started = false;
     private static float s_Difficulty = 5f;
-    private static int s_Score = 0;
-    private static int s_Highscore = 0;
 
     private Node _menu;
 
@@ -30,6 +31,8 @@ public partial class Game : Node3D
 
         _menu = MenuScene.Instantiate();
         AddChild(_menu);
+
+        NavigationRegion.BakeNavigationMesh(false);
     }
 
     public override void _Process(double delta)
@@ -59,18 +62,21 @@ public partial class Game : Node3D
 
     public static void Start()
     {
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+
         InProgress = true;
 
         Me.BestLabel.Visible = false;
 
         s_Difficulty = 5f;
-        s_Score = 0;
-
-        Me.ScoreLabel.Text = "0";
+        Score = 0;
 
         Me._menu.QueueFree();
 
         StartRound(s_Difficulty);
+
+        GD.Print("Start: " + stopwatch.ElapsedMilliseconds);
     }
 
     public static void End()
@@ -84,9 +90,7 @@ public partial class Game : Node3D
 
         Me.BestLabel.Visible = true;
 
-        if (s_Score > s_Highscore) s_Highscore = s_Score;
-
-        Me.ScoreLabel.Text = s_Highscore.ToString();
+        if (Score > Highscore) Highscore = Score;
 
         Me._menu = Me.MenuScene.Instantiate();
         Me.AddChild(Me._menu);
@@ -100,7 +104,22 @@ public partial class Game : Node3D
 
     public static void StartRound(float difficulty)
     {
-        Me.NavigationRegion.BakeNavigationMesh(false);
+        Udils.WeightedRandom<PackedScene> weightedRandom = new Udils.WeightedRandom<PackedScene>(new List<Udils.WeightedRandom<PackedScene>.Element>() {
+            new Udils.WeightedRandom<PackedScene>.Element {
+                Weight = 1f / 1f,
+                Value = Me.EnemyNormalScene
+            },
+            new Udils.WeightedRandom<PackedScene>.Element
+            {
+                Weight = 1f / 2f,
+                Value = Me.EnemyLargeScene
+            },
+            new Udils.WeightedRandom<PackedScene>.Element
+            {
+                Weight = 1f / 2f,
+                Value = Me.EnemyRangedScene
+            }
+        });
 
         for (float usedScore = 0; usedScore < difficulty; usedScore++)
         {
@@ -108,29 +127,7 @@ public partial class Game : Node3D
 
             if (!success) continue;
 
-            List<Udils.WeightedRandom<PackedScene>.Element> enemies = new List<Udils.WeightedRandom<PackedScene>.Element>() {
-                new Udils.WeightedRandom<PackedScene>.Element {
-                    Weight = 1f / 1f,
-                    Value = Me.EnemyNormalScene
-                }
-            };
-
-            if (difficulty - usedScore >= 2f)
-            {
-                enemies.Add(new Udils.WeightedRandom<PackedScene>.Element
-                {
-                    Weight = 1f / 2f,
-                    Value = Me.EnemyLargeScene
-                });
-
-                enemies.Add(new Udils.WeightedRandom<PackedScene>.Element
-                {
-                    Weight = 1f / 2f,
-                    Value = Me.EnemyRangedScene
-                });
-            }
-
-            Udils.WeightedRandom<PackedScene>.Element choice = new Udils.WeightedRandom<PackedScene>(enemies).GetElement();
+            Udils.WeightedRandom<PackedScene>.Element choice = weightedRandom.GetElement();
 
             usedScore--;
             usedScore += 1f / choice.Weight;
@@ -147,7 +144,7 @@ public partial class Game : Node3D
     {
         for (int attempt = 0; attempt < 3; attempt++)
         {
-            Vector3 spawnPosition = NavigationServer3D.Singleton.RegionGetRandomPoint(Me.NavigationRegion.GetRid(), Me.NavigationRegion.NavigationLayers, true);
+            Vector3 spawnPosition = NavigationServer3D.Singleton.RegionGetRandomPoint(Me.NavigationRegion.GetRid(), Me.NavigationRegion.NavigationLayers, false);
 
             Vector3[] path = NavigationServer3D.Singleton.MapGetPath(Me.NavigationRegion.GetNavigationMap(), spawnPosition, Me.SpawnPoint.GlobalPosition, false);
 
@@ -168,8 +165,6 @@ public partial class Game : Node3D
 
     public static void UpdateScore(int amount)
     {
-        s_Score += amount;
-
-        Me.ScoreLabel.Text = s_Score.ToString();
+        Score += amount;
     }
 }
