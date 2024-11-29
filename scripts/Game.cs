@@ -11,6 +11,11 @@ public partial class Game : Node3D
     [Export] public PackedScene EnemyNormalScene;
     [Export] public PackedScene EnemyLargeScene;
     [Export] public PackedScene EnemyRangedScene;
+    [Export] public PackedScene EnemyRangedBurstScene;
+    [Export] public PackedScene EnemyRangedBurst2Scene;
+    [Export] public PackedScene EnemyRangedSpreadScene;
+    [Export] public PackedScene EnemyRangedSpread2Scene;
+    [Export] public PackedScene EnemyRangedBurstSpreadScene;
     [Export] public PackedScene MenuScene;
     [Export] public Node3D SpawnPoint;
     [Export] public NavigationRegion3D NavigationRegion;
@@ -135,6 +140,31 @@ public partial class Game : Node3D
             {
                 Weight = 1f / 2f,
                 Value = Me.EnemyRangedScene
+            },
+            new Udils.WeightedRandom<PackedScene>.Element
+            {
+                Weight = 1f / 6f,
+                Value = Me.EnemyRangedBurstScene
+            },
+            new Udils.WeightedRandom<PackedScene>.Element
+            {
+                Weight = 1f / 6f,
+                Value = Me.EnemyRangedSpreadScene
+            },
+            new Udils.WeightedRandom<PackedScene>.Element
+            {
+                Weight = 1f / 12f,
+                Value = Me.EnemyRangedBurst2Scene
+            },
+            new Udils.WeightedRandom<PackedScene>.Element
+            {
+                Weight = 1f / 12f,
+                Value = Me.EnemyRangedSpread2Scene
+            },
+            new Udils.WeightedRandom<PackedScene>.Element
+            {
+                Weight = 1f / 12f,
+                Value = Me.EnemyRangedBurstSpreadScene
             }
         });
 
@@ -145,6 +175,8 @@ public partial class Game : Node3D
             if (!success) continue;
 
             Udils.WeightedRandom<PackedScene>.Element choice = weightedRandom.GetElement();
+
+            if (difficulty - usedScore < 1f / choice.Weight) continue;
 
             usedScore--;
             usedScore += 1f / choice.Weight;
