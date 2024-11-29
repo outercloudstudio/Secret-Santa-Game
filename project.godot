@@ -26,6 +26,7 @@ movie_writer/movie_file="D:/Devlogs/SecretSanta/PlatformingShowcase1.avi"
 [global_group]
 
 Enemies=""
+Bonus=""
 
 [input]
 

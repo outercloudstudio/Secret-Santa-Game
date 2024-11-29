@@ -300,10 +300,14 @@ public partial class Player : CharacterBody3D
         if (IsOnFloor())
         {
             Game.UpdateScore(100);
+            ScoreUI.AddScore("+100 Kill");
         }
         else
         {
             Game.UpdateScore(200 + (int)(_freeFallTime * 100));
+            ScoreUI.AddScore("+100 Kill");
+            ScoreUI.AddScore("+100 Midair");
+            ScoreUI.AddScore($"+{(int)(_freeFallTime * 100)} Airtime");
         }
     }
 

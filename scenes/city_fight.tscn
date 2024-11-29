@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://b0btl806nuqh6"]
+[gd_scene load_steps=20 format=3 uid="uid://b0btl806nuqh6"]
 
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_6ctq6"]
 [ext_resource type="PackedScene" uid="uid://mcahqrmwo46w" path="res://scenes/player.tscn" id="1_us7lh"]
@@ -11,6 +11,7 @@
 [ext_resource type="Shader" path="res://scripts/invert.gdshader" id="8_3id2m"]
 [ext_resource type="FontFile" uid="uid://t5bgugut4c71" path="res://Inter_18pt-SemiBold.ttf" id="8_adqbk"]
 [ext_resource type="Script" path="res://scripts/ScoreUI.cs" id="9_dt24j"]
+[ext_resource type="PackedScene" uid="uid://b5ovuns2nu65u" path="res://scenes/bonus.tscn" id="10_48tku"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_325jp"]
 sky_top_color = Color(0.573511, 0.340421, 0.636771, 1)
@@ -122,8 +123,10 @@ stream = ExtResource("7_htf2d")
 volume_db = -10.0
 autoplay = true
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." node_paths=PackedStringArray("BonusParent")]
 script = ExtResource("9_dt24j")
+BonusScene = ExtResource("10_48tku")
+BonusParent = NodePath("Control")
 
 [node name="Control" type="Control" parent="CanvasLayer"]
 layout_mode = 3
