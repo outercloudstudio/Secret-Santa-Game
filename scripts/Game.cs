@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 public partial class Game : Node3D
 {
@@ -30,6 +31,19 @@ public partial class Game : Node3D
         Me = this;
 
         NavigationRegion.BakeNavigationMesh(false);
+
+        string appDataPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData);
+        string gamePath = Path.Combine(appDataPath, "Polydash");
+
+        if (!Directory.Exists(gamePath)) Directory.CreateDirectory(gamePath);
+
+        string highScorePath = Path.Combine(gamePath, "highscore");
+
+        if (File.Exists(highScorePath))
+        {
+            string scoreText = File.ReadAllText(highScorePath);
+            if (int.TryParse(scoreText, out int readScore)) Highscore = readScore;
+        }
     }
 
     public override void _Process(double delta)
@@ -59,9 +73,6 @@ public partial class Game : Node3D
 
     public static void Start()
     {
-        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-        stopwatch.Start();
-
         InProgress = true;
 
         Me.BestLabel.Visible = false;
@@ -72,8 +83,6 @@ public partial class Game : Node3D
         Me.MenuAnimationPlayer.Play("out");
 
         StartRound(s_Difficulty);
-
-        GD.Print("Start: " + stopwatch.ElapsedMilliseconds);
     }
 
     public static void End()
@@ -87,7 +96,19 @@ public partial class Game : Node3D
 
         Me.BestLabel.Visible = true;
 
-        if (Score > Highscore) Highscore = Score;
+        if (Score > Highscore)
+        {
+            Highscore = Score;
+
+            string appDataPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData);
+            string gamePath = Path.Combine(appDataPath, "Polydash");
+
+            if (!Directory.Exists(gamePath)) Directory.CreateDirectory(gamePath);
+
+            string highScorePath = Path.Combine(gamePath, "highscore");
+
+            File.WriteAllText(highScorePath, Highscore.ToString());
+        }
 
         Me.MenuAnimationPlayer.PlayBackwards("out");
     }

@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://mcahqrmwo46w"]
+[gd_scene load_steps=22 format=3 uid="uid://mcahqrmwo46w"]
 
 [ext_resource type="Script" path="res://scripts/Player.cs" id="1_8qrv1"]
 [ext_resource type="PackedScene" uid="uid://uita6hnuthsk" path="res://scenes/beam.tscn" id="2_ibevl"]
@@ -25,6 +25,14 @@ shader_parameter/normal_threshold = 0.1
 shader_parameter/depth_threshold = 0.05
 shader_parameter/depth_artifact_correction_coef = 2.0
 shader_parameter/outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j4ov0"]
+albedo_color = Color(0, 0.575041, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_todpw"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bkx2b"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_y8q62"]
 random_pitch = 1.1
@@ -77,6 +85,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32, -0.229269, -0.310672)
 
 [node name="blasterH" parent="Camera3D/Handle/Grip" instance=ExtResource("4_30e8i")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.395, -5.96046e-08, 0.0302696, -0.0383282)
+
+[node name="blasterH" parent="Camera3D/Handle/Grip/blasterH" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_j4ov0")
+surface_material_override/1 = SubResource("StandardMaterial3D_todpw")
+surface_material_override/2 = SubResource("StandardMaterial3D_j4ov0")
+surface_material_override/3 = SubResource("StandardMaterial3D_bkx2b")
 
 [node name="ShootPosition" type="Node3D" parent="Camera3D/Handle/Grip/blasterH"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.217234)
