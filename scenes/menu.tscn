@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cxa07gaark3ig"]
+[gd_scene load_steps=10 format=3 uid="uid://cxa07gaark3ig"]
 
 [ext_resource type="Shader" path="res://scripts/invert.gdshader" id="1_tk015"]
 [ext_resource type="FontFile" uid="uid://t5bgugut4c71" path="res://Inter_18pt-SemiBold.ttf" id="2_w3f15"]
@@ -25,7 +25,7 @@ tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "handle_modes": PackedInt32Array(0, 0),
-"points": PackedFloat32Array(164, -0.25, 0, 0, -42.5, -75, -0.4, 2.5, 0.25, 0),
+"points": PackedFloat32Array(164, -0.25, 0, 0, -42.5, -120, -0.4, 2.5, 0.25, 0),
 "times": PackedFloat32Array(0, 0.5)
 }
 
@@ -71,6 +71,10 @@ font_size = 54
 font = ExtResource("2_w3f15")
 font_size = 18
 
+[sub_resource type="LabelSettings" id="LabelSettings_jgsxs"]
+font = ExtResource("2_w3f15")
+font_size = 12
+
 [node name="Menu" type="CanvasLayer"]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -107,10 +111,29 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -63.0
+offset_left = -65.5
 offset_top = 164.0
-offset_right = 63.0
-offset_bottom = 187.0
+offset_right = 65.5
+offset_bottom = 239.0
 grow_horizontal = 2
 text = "SPACE to Start"
 label_settings = SubResource("LabelSettings_q4rsb")
+
+[node name="Label2" type="Label" parent="Control/Label"]
+modulate = Color(1, 1, 1, 0.831373)
+material = SubResource("ShaderMaterial_0s62v")
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -70.5
+offset_top = 34.9
+offset_right = 70.5
+offset_bottom = 109.9
+grow_horizontal = 2
+text = "WASD to Move
+CLICK to Shoot
+- to Decrease Sensitivity
+= to Increase Sensitivity"
+label_settings = SubResource("LabelSettings_jgsxs")
+horizontal_alignment = 1
